@@ -1,0 +1,327 @@
+:root {
+  --bg: #ececec;
+  --bgSide: #FFFFFF;
+  --bgHead: #e5e5e5;
+  --bgContent: #FFFFFF;
+  --txt: #000000;
+  --bgButton: #01a7db;
+  --txtButton: #FFFFFF;
+  --bgButtonHover: #019ecf;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--bg);
+  color: var(--txt);
+  overflow: hidden;
+}
+
+/*  TOAST  */
+.toast {
+  min-width: 250px;
+}
+
+.toasts {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
+/*  LAYOUT   */
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  background-color: var(--bgSide);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.sidebarOpen {
+  width: 350px;
+}
+
+.sidebarRight {
+  right: 0;
+}
+
+.sidebarLeft {
+  left: 0;
+}
+
+.main {
+  transition: margin-left .5s, margin-right .5s;
+  height: 100%;
+}
+
+.main.openLeft {
+  margin-left: 350px;
+}
+
+.main.openRight {
+  margin-right: 350px;
+}
+
+/*   SIDEBAR ELEMENTS   */
+.tab {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.content {
+  display: none;
+  height: 0px;
+  background-color: var(--bgContent);
+  transition: height 0.4s;
+}
+
+.tab.open .content {
+  display: block;
+  height: inherit;
+  padding: 5px;
+}
+
+.section {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: 5px 0px 5px 0px;
+  align-items: center;
+}
+
+.section>* {
+  margin: 0 auto;
+}
+
+.section .column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 140px;
+  margin: 0px 20px;
+}
+
+.column img {
+  height: 80%;
+}
+
+.head {
+  background-color: var(--bgHead);
+  height: 32px;
+  line-height: 32px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.tab .icon {
+  background-size: cover;
+  background-position: center;
+  width: 13px;
+  height: 13px;
+  margin: 0px 3px 0px 6px;
+}
+
+.tab .icon {
+  background-image: url("../assets/img/arrow-close.svg");
+}
+
+.tab.open .icon {
+  background-image: url("../assets/img/arrow-open.svg");
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 91%;
+}
+
+.tab .row>input {
+  width: 200px;
+}
+
+.tab .counter input[type=text] {
+  width: 85px;
+}
+
+.tab .but:not(.btn-sm) {
+  width: 38px;
+  height: 32px;
+  font-size: 13px;
+  line-height: 32px;
+  padding: 0px;
+}
+
+.tab .but {
+  cursor: default;
+}
+
+.output {
+  font-size: 14px;
+  text-align: center;
+  margin: 0px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.output .list-group>* {
+  padding: 5px;
+}
+
+/*   CUSTOM SELECT   */
+select {
+  width: 100%;
+  height: 30px;
+  font-size: 15px;
+  margin-bottom: 5px;
+  background-color: var(--bgContent);
+  border: none;
+  color: var(--txt);
+  border-radius: 10px;
+  border: 1px solid var(--txt);
+}
+
+option {
+  background-color: var(--bgContent);
+  color: var(--txt);
+}
+
+/*  WORKSPACE  */
+canvas {
+  position: absolute;
+}
+
+canvas.selected {
+  border: 1px dashed black;
+}
+
+.toolsSection {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  flex: 0.5;
+}
+
+.tools {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  position: relative;
+  left: 0px;
+  top: 5px;
+}
+
+.tools .icon {
+  display: flex;
+}
+
+.tools .icon img {
+  margin: 0 auto;
+  width: 32px;
+  height: 32px;
+}
+
+.tool {
+  border-radius: 50px;
+  height: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.MyPopover {
+  display: none;
+  z-index: 1000;
+  position: absolute;
+  height: fit-content;
+  background-color: var(--bgSide);
+  border: #a8a8a8 solid 1px;
+  border-radius: 3px;
+  padding: 5px;
+  flex-direction: column;
+  width: 200px;
+  top: 45px;
+  left: -85px;
+}
+
+.MyPopover:before {
+  display: none;
+  z-index: 1000;
+  position: relative;
+  background-color: var(--bgSide);
+  width: 10px;
+  height: 10px;
+  content: "";
+  transform: rotateZ(45deg);
+  top: -11px;
+  left: 90px;
+  border-left: #a8a8a8 1px solid;
+  border-top: #a8a8a8 solid 1px;
+}
+
+.MyPopover>div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.MyPopover .section {
+  width: 100%;
+}
+
+.MyPopover .row>input {
+  width: 105px;
+}
+
+.MyPopover .counter>input[type=text] {
+  width: 50px;
+}
+
+.MyPopover .counter>input[type=range] {
+  width: 100px;
+}
+
+.tool:hover .MyPopover {
+  display: flex;
+}
+
+.tool:hover .MyPopover:before {
+  display: block;
+}
+
+.workspace {
+  display: flex;
+  width: 100%;
+  overflow: auto;
+}
+
+.space {
+  background-color: white;
+  margin: auto;
+  position: relative;
+}
+
+.laser {
+  width: 4px;
+  height: 4px;
+  border-radius: 10px;
+  background-color: red;
+  position: absolute;
+}
+
+.ghostElement {
+  border: 1px dashed black;
+  position: absolute;
+  top: -1000px;
+}
+
+/* FileManager */
+.filesList {
+  cursor: default;
+}
