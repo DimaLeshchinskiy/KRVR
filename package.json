@@ -1,19 +1,32 @@
 {
   "name": "KRVR",
-  "version": "1.0.0",
+  "version": "0.2.8",
   "description": "KRVR free open source software",
   "author": "Dima Leshchinskiy",
   "main": "main.js",
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/DimaLeshchinskiy/KRVR",
   "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "DimaLeshchinskiy",
+        "repo": "KRVR"
+      }
+    ],
     "appId": "com.krvr",
     "mac": {
       "category": "com.app"
+    },
+    "nsis":{
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
     }
   },
   "scripts": {
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "publish": "electron-builder -p always",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "rebuild": "./node_modules/.bin/electron-rebuild",
@@ -26,11 +39,11 @@
     "electron": "^8.2.3",
     "electron-builder": "^22.7.0",
     "electron-packager": "^14.2.1",
-    "electron-rebuild": "^1.10.1",
-    "electron-updater": "^4.3.1"
+    "electron-rebuild": "^1.10.1"
   },
   "dependencies": {
     "dxf-parser": "^1.0.0-alpha.2",
+    "electron-updater": "^4.3.1",
     "jquery": "^3.5.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

@@ -1,5 +1,6 @@
 const electron = require('electron');
 const {app, BrowserWindow} = electron;
+const {autoUpdater} = require("electron-updater");
 
 function createWindow () {
   let win = new BrowserWindow({
@@ -12,6 +13,15 @@ function createWindow () {
 
   win.loadFile('./html/index.html')
   win.webContents.openDevTools()
+
+
+  autoUpdater.checkForUpdatesAndNotify();
+}
+
+function sendStatusToWindow(text) {
+  log.info(text);
+  win.webContents.send('message', text);
+  console.log(text);
 }
 
 app.whenReady().then(createWindow)
@@ -27,3 +37,29 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+
+// Autoupdate definition
+
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+})
+autoUpdater.on('update-available', (info) => {
+  sendStatusToWindow('Update available.');
+})
+autoUpdater.on('update-not-available', (info) => {
+  sendStatusToWindow('Update not available.');
+})
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow('Error in auto-updater. ' + err);
+})
+autoUpdater.on('download-progress', (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+  sendStatusToWindow(log_message);
+})
+
+autoUpdater.on('update-downloaded', (info) => {
+  sendStatusToWindow('Update downloaded');
+});

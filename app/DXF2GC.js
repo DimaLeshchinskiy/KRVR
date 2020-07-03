@@ -199,12 +199,12 @@ exports.getGcode = function(file){
 
   angle = file.angle;
 
+  feed = config.getByKey("feed");
+  GONN = "M3 S" + config.getPWM();
+
   let gcode = ["$X", "G21", GOFF];
   let entities = json.entities;
   for(let i = 0; i < entities.length; i++){
-    feed = config.getByKey("feed");
-    GONN = "M3 S" + config.getPWM();
-
     let entity = entities[i];
 
     let type = entity.type;
