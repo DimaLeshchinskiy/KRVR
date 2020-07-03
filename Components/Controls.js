@@ -191,7 +191,7 @@ class Controls extends React.Component{
                   React.createElement(
                     "div",
                     { "className": "but btn btn-primary decZ", onClick: this.decZ},
-                    "-ZZ"
+                    "-Z"
                   )
                 )
               ),
