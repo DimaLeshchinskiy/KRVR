@@ -15,12 +15,10 @@ function createWindow () {
   win.webContents.openDevTools()
 
 
-  autoUpdater.checkForUpdatesAndNotify();
+  autoUpdater.checkForUpdates();
 }
 
 function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.send('message', text);
   console.log(text);
 }
 
