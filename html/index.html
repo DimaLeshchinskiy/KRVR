@@ -23,6 +23,9 @@
     return this > 0 && (this.isFloat() || this.isInt());
   }
 
+  var $ = require('jquery');
+  var jQuery = $;
+
   const config = require('../app/config');
   config.load();
 
@@ -35,6 +38,8 @@
     document.getElementById("root")
   );
 </script>
+
+<script src="../js/bootstrap/bootstrap.js"></script>
 <!--
 
 <head>
@@ -268,12 +273,12 @@
 
   <div class="toasts"></div>
 
-  <script src="../js/toasts.js"></script>
+
   <script src="../js/workspace.js"></script>
   <script src="../js/sidebar.js"></script>
   <script src="../js/settings.js"></script>
 
-  <script src="../js/bootstrap/bootstrap.js"></script>
+
 
 </body>
 -->

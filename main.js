@@ -3,9 +3,11 @@ const {app, BrowserWindow, Menu} = electron;
 const {autoUpdater} = require("electron-updater");
 const isDev = require('electron-is-dev');
 
+let win;
+
 function createWindow () {
 
-  let win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1700,
     height: 1300,
     webPreferences: {
@@ -20,11 +22,9 @@ function createWindow () {
   if (isDev)
     win.webContents.openDevTools();
 
-  autoUpdater.checkForUpdates();
-}
-
-function sendStatusToWindow(text) {
-  console.log(text);
+  win.webContents.once('dom-ready', () => {
+    autoUpdater.checkForUpdates();
+  })
 }
 
 app.whenReady().then(createWindow)
@@ -43,6 +43,11 @@ app.on('activate', () => {
 
 
 // Autoupdate definition
+
+function sendStatusToWindow(text) {
+  console.log(text);
+  win.webContents.send('AutoUpdateMessage', text);
+}
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');

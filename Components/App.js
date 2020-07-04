@@ -2,6 +2,7 @@ const React = require("react");
 
 var SideBar = require("../Components/SideBar.js");
 var Workspace = require("../Components/Workspace.js");
+var ToastContainer = require("../Components/ToastContainer.js");
 
 class App extends React.Component{
 
@@ -38,6 +39,7 @@ class App extends React.Component{
                                                 toggleRight: this.toggleRight
                                               }),
               React.createElement(SideBar, {type:"right", isOpen: this.state.rightisOpen}),
+              React.createElement(ToastContainer, null)
           );
   }
 }
