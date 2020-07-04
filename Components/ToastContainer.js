@@ -19,7 +19,8 @@ class ToastContainer extends React.Component{
       class: 'toast'
     });
 
-    toast.attr("data-autohide", "false");
+    toast.attr("data-autohide", "true");
+    toast.attr("data-delay", "10000");
 
     toast.append(this.getToastHead(title));
     toast.append(this.getToastBody(msg));
