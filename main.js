@@ -80,6 +80,12 @@ function createMenu(){
                 }
               },
               {
+                label:'Visit our shop',
+                click() {
+                    console.log("Shop");
+                }
+              },
+              {
                 label:'About',
                 click() {
                     console.log("About");
