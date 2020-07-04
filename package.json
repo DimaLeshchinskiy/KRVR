@@ -17,7 +17,7 @@
     "mac": {
       "category": "com.app"
     },
-    "nsis":{
+    "nsis": {
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "dxf-parser": "^1.0.0-alpha.2",
+    "electron-is-dev": "^1.2.0",
     "electron-updater": "^4.3.1",
     "jquery": "^3.5.0",
     "react": "^16.13.1",

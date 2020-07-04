@@ -1,8 +1,10 @@
 const electron = require('electron');
-const {app, BrowserWindow} = electron;
+const {app, BrowserWindow, Menu} = electron;
 const {autoUpdater} = require("electron-updater");
+const isDev = require('electron-is-dev');
 
 function createWindow () {
+
   let win = new BrowserWindow({
     width: 1700,
     height: 1300,
@@ -11,9 +13,12 @@ function createWindow () {
     }
   })
 
-  win.loadFile('./html/index.html')
-  win.webContents.openDevTools()
+  createMenu();
 
+  win.loadFile('./html/index.html');
+
+  if (isDev)
+    win.webContents.openDevTools();
 
   autoUpdater.checkForUpdates();
 }
@@ -61,3 +66,36 @@ autoUpdater.on('download-progress', (progressObj) => {
 autoUpdater.on('update-downloaded', (info) => {
   sendStatusToWindow('Update downloaded');
 });
+
+// Menu setup
+function createMenu(){
+  var menu = Menu.buildFromTemplate([
+      {
+          label: 'Menu',
+              submenu: [
+              {
+                label:'Visit our web',
+                click() {
+                    console.log("Web");
+                }
+              },
+              {
+                label:'About',
+                click() {
+                    console.log("About");
+                }
+              },
+              {type:'separator'},
+              {
+                  label:'Exit',
+                  click() {
+                      app.quit()
+                  },
+                  accelerator: 'CmdOrCtrl+Q'
+              }
+          ]
+      }
+    ]);
+
+    Menu.setApplicationMenu(menu);
+}
