@@ -61,7 +61,7 @@ autoUpdater.on('error', (err) => {
   sendStatusToWindow('Error in auto-updater.');
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded. Changes will turn ro a power after program reboot.');
+  sendStatusToWindow('Update downloaded. Changes will turn to a power after program reboot.');
 });
 
 // Menu setup
