@@ -18,6 +18,8 @@ exports.getConnection = getConnection;
 exports.isOpen = isOpen;
 exports.getPorts = getPortsAvailable;
 
+exports.sendAsync = sendToArduinoAsync;
+
 function isOpen(){
   return connection && connection.isOpen;
 }
@@ -43,6 +45,20 @@ function sendToArduino(data){
   writeToArduino();
 }
 
+function sendToArduinoAsync(cmd){
+  if(!isOpen()){
+    //showMsg("Ooops", "Port is not connected");
+    console.log(data + " test");
+    return;
+  }
+
+  if(!connection || !connection.isOpen) return;
+
+  if(cmd){
+    connection.write(cmd + "\n");
+  }
+}
+
 function writeToArduino(){
   if(!connection || !connection.isOpen) return;
 
@@ -50,7 +66,6 @@ function writeToArduino(){
 
   if(data){
     listener.emit("log", data, "input");
-    listener.emit("gcodeSend", data);
 
     connection.write(data + "\n");
   }else{
@@ -91,8 +106,14 @@ function getConnection(port){
 
 
 parser.on('data', function(data) {
-  if(data.includes("ok") || data.includes("Grbl")){
+  if(data.includes("MPos")){
+    listener.emit("position", data);
+  }
+  else if(data.includes("Grbl")){
     listener.emit("log", data, "msg");
+    writeToArduino();
+  }
+  else if(data.includes("ok")){
     writeToArduino();
   }
   else if(data.includes("error")){

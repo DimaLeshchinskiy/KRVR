@@ -4,6 +4,7 @@ var fileManager = require("../app/fileManager");
 var flm = require("../app/fileLoadModule");
 var d2c = require("../app/DXF2CANVAS");
 var config = require("../app/config");
+var serial = require("../app/serial");
 
 var Tool = require("../Components/Tool.js");
 var ToolGrid = require("../Components/ToolGrid.js");
@@ -24,7 +25,6 @@ class Workspace extends React.Component{
 
     this.drop = this.drop.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
-    this.dragStart = this.dragStart.bind(this);
 
     this.gridToggle = this.gridToggle.bind(this);
     this.gridSizeChange = this.gridSizeChange.bind(this);
@@ -35,10 +35,14 @@ class Workspace extends React.Component{
 
     this.onSelect = this.onSelect.bind(this);
 
+    this.renderLaser = this.renderLaser.bind(this);
+
     this.spaceRef = React.createRef();
     this.workspaceRef = React.createRef();
+    this.laserRef = React.createRef();
 
     fileManager.listener.on("update", this.onSelect);
+    serial.listener.on("position", this.renderLaser);
   }
 
   componentDidMount() {
@@ -51,6 +55,12 @@ class Workspace extends React.Component{
     let height = Math.max( body.scrollHeight, body.offsetHeight,
                            html.clientHeight, html.scrollHeight, html.offsetHeight );
     workspace.style.height = (height - 50) + "px";
+
+    setInterval(
+      function(){
+        console.log("test");
+        serial.sendAsync("?");
+      }, 3000);
   }
 
   componentDidUpdate() {
@@ -80,8 +90,6 @@ class Workspace extends React.Component{
 
       cnv.style.left = left + "px";
       cnv.style.top = top + "px";
-
-      cnv.addEventListener("dragstart", this.dragStart);
 
       cnv.addEventListener("dragover", function(event){
         event.preventDefault();
@@ -171,7 +179,7 @@ class Workspace extends React.Component{
                 React.createElement(
                   "div",
                   { "className": "space", ref:this.spaceRef },
-                  //React.createElement("div", { "className": "laser" }),
+                  React.createElement("div", { "className": "laser", ref:this.laserRef }),
                   React.createElement(Grid, { render: this.state.stickyGrid, size:this.state.stickyGridSize })
                 )
               )
@@ -209,19 +217,7 @@ class Workspace extends React.Component{
     }
   }
 
-  dragStart(event){
-    /*this.ghostEle = document.createElement('div');
-    this.ghostEle.classList.add('ghostElement');
-    this.ghostEle.style.height = event.target.height + "px";
-    this.ghostEle.style.width = event.target.width + "px";
-    this.ghostEle.style.transform = event.target.style.transform;
-    document.body.appendChild(this.ghostEle);
-    event.dataTransfer.setDragImage(this.ghostEle, 0, 0);*/
-  }
-
   dragEnd(event){
-    //document.body.removeChild(this.ghostEle);
-
     let itemX = 0;
     let itemY = 0;
     let item = event.target;
@@ -270,6 +266,33 @@ class Workspace extends React.Component{
 
     dom.style.minHeight = (height * scale) + "px";
     dom.style.minWidth = (width * scale) + "px";
+  }
+
+  //laser visualisation
+  renderLaser(str){
+    console.log(str);
+    //str = <Idle|MPos:10.000,10.000,0.000|FS:0,0|Pn:XYZ>
+    let pos3D = str.split("|")[1];
+    //pos3D = MPos:10.000,10.000,0.000
+    pos3D = pos3D.split(":")[1];
+    //pos3D = 10.000,10.000,0.000
+    pos3D = pos3D.split(",");
+
+    let laser = this.laserRef.current;
+    let scale = config.getByKey("ScreenS");
+    let height = config.getByKey("ScreenH");
+
+    for (var i = 0; i < pos3D.length; i++) {
+      pos3D[i] = parseFloat(pos3D[i]) / scale;
+    }
+
+    let x = pos3D[0] * scale - (laser.offsetWidth / 2);
+    let y = (height - pos3D[1]) * scale - (laser.offsetWidth / 2);
+    let z = pos3D[2];
+
+    laser.style.left = x + "px";
+    laser.style.top = y + "px";
+
   }
 }
 
