@@ -29,7 +29,7 @@ function createWindow () {
     function(){
       console.log("test");
       serial.sendAsync("?");
-    }, 600000); //10min
+    }, 1800000); //30min
 }
 
 app.whenReady().then(createWindow)
@@ -94,8 +94,6 @@ function createMenu(){
                     })
 
                     about_win.setMenuBarVisibility(false);
-
-                    about_win.webContents.openDevTools();
 
                     about_win.loadFile('./html/about.html');
 
