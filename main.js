@@ -24,6 +24,12 @@ function createWindow () {
   win.webContents.once('dom-ready', () => {
     autoUpdater.checkForUpdates();
   })
+
+  setInterval(
+    function(){
+      console.log("test");
+      serial.sendAsync("?");
+    }, 600000); //10min
 }
 
 app.whenReady().then(createWindow)
