@@ -1,0 +1,23 @@
+.section {
+  padding: 10px;
+  justify-content: space-around;
+  margin: 5px;
+}
+
+.column {
+  justify-content: none;
+}
+
+.paragraph {
+  background-color: var(--bgSide);
+  margin: 10px;
+}
+
+body {
+  padding: 0px;
+}
+
+h3 {
+  text-align: center;
+  margin: 2px;
+}

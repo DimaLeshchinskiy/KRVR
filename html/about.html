@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../css/bootstrap/bootstrap.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/about.css">
+</head>
+
+<body>
+
+  <div class="item">
+    <h3>KRVR Software</h3>
+  </div>
+  <div class="section paragraph jumbotron">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus accumsan lacus odio, non ultrices dui hendrerit ut. Vestibulum quis risus felis. In hac habitasse platea dictumst. Orci varius natoque penatibus et magnis dis parturient
+      montes, nascetur ridiculus mus. Curabitur molestie iaculis urna. Vivamus vitae urna nec ligula blandit tincidunt. Ut efficitur rhoncus dolor. Morbi consequat nunc a sollicitudin vestibulum. Etiam elementum urna et sapien semper, eget tempus
+      neque sagittis. Nullam nec consequat risus. Etiam egestas nulla sed lorem aliquam facilisis. Curabitur justo quam, tempor non ipsum a, tempus rhoncus quam. Nam quis scelerisque nulla. Aenean nisi lacus, sollicitudin in nibh sed, efficitur
+      fringilla risus.<br><br>
+
+      Pellentesque orci leo, ultricies nec varius non, tincidunt porttitor nisi. Duis scelerisque ultrices nunc id posuere. Pellentesque egestas iaculis eros id fringilla. Phasellus nibh leo, finibus rutrum turpis at, ornare semper ante. Nulla
+      molestie est at lacus accumsan, rutrum ornare tortor interdum. In a posuere est. Vestibulum quis sollicitudin nisi, vel pretium elit. Curabitur eleifend nisi consectetur, faucibus risus ac, varius sem. Nunc id velit at arcu imperdiet dignissim.
+      Sed nec ex sagittis, semper orci vel, varius orci.</p>
+  </div>
+
+  <div class="section">
+    <div class="column">
+      <div class="item">
+        <p id="version"></p>
+      </div>
+      <div class="item">
+        <p>Company name: DTM Systems</p>
+      </div>
+      <div class="item">
+        <p>Author: Dima Leshchinskiy</p>
+      </div>
+    </div>
+    <div class="column">
+      <div class="item">
+        <p>Empty empty: Empty empty</p>
+      </div>
+      <div class="item">
+        <p>Empty empty: Empty empty</p>
+      </div>
+      <div class="item">
+        <p>Empty empty: Empty empty</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="item">
+      <a href="#" datahref="https://www.facebook.com/DTMSyst3ms/">Facebook</a>
+    </div>
+    <div class="item">
+      <a href="#" datahref="https://github.com/DimaLeshchinskiy/KRVR">GitHub</a>
+    </div>
+    <div class="item">
+      <a href="#" datahref="http://www.dtm.systems/">Official web</a>
+    </div>
+  </div>
+
+</body>
+
+<script type="text/javascript">
+  const {
+    app,
+    shell
+  } = require('electron').remote;
+
+  let version = app.getVersion();
+  let el = document.getElementById("version");
+  el.innerHTML = "Version: " + version;
+
+  let links = document.getElementsByTagName("a");
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener("click", function(event) {
+      event.preventDefault();
+      let href = event.target.getAttribute("datahref");
+      shell.openExternal(href);
+    });
+  }
+</script>
+
+</html>

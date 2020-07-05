@@ -1,5 +1,4 @@
-const electron = require('electron');
-const {app, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu} = require('electron');
 const {autoUpdater} = require("electron-updater");
 const isDev = require('electron-is-dev');
 
@@ -72,21 +71,29 @@ function createMenu(){
           label: 'Menu',
               submenu: [
               {
-                label:'Visit our web',
-                click() {
-                    console.log("Web");
-                }
-              },
-              {
-                label:'Visit our shop',
-                click() {
-                    console.log("Shop");
-                }
-              },
-              {
                 label:'About',
                 click() {
-                    console.log("About");
+
+                    let about_win = new BrowserWindow({
+                      width: 700,
+                      height: 620,
+                      parent:win,
+                      modal:true,
+                      show:false,
+                      title: "About",
+                      resizable:false,
+                      webPreferences: {
+                        nodeIntegration: true
+                      }
+                    })
+
+                    about_win.setMenuBarVisibility(false);
+
+                    about_win.webContents.openDevTools();
+
+                    about_win.loadFile('./html/about.html');
+
+                    about_win.show();
                 }
               },
               {type:'separator'},
