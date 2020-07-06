@@ -278,66 +278,6 @@ canvas.selected {
   position: relative;
 }
 
-.MyPopover {
-  display: none;
-  z-index: 1000;
-  position: absolute;
-  height: fit-content;
-  background-color: var(--bgSide);
-  border: #a8a8a8 solid 1px;
-  border-radius: 3px;
-  padding: 5px;
-  flex-direction: column;
-  width: 200px;
-  top: 45px;
-  left: -85px;
-}
-
-.MyPopover:before {
-  display: none;
-  z-index: 1000;
-  position: relative;
-  background-color: var(--bgSide);
-  width: 10px;
-  height: 10px;
-  content: "";
-  transform: rotateZ(45deg);
-  top: -11px;
-  left: 90px;
-  border-left: #a8a8a8 1px solid;
-  border-top: #a8a8a8 solid 1px;
-}
-
-.MyPopover>div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.MyPopover .section {
-  width: 100%;
-}
-
-.MyPopover .row>input {
-  width: 105px;
-}
-
-.MyPopover .counter>input[type=text] {
-  width: 50px;
-}
-
-.MyPopover .counter>input[type=range] {
-  width: 100px;
-}
-
-.tool:hover .MyPopover {
-  display: flex;
-}
-
-.tool:hover .MyPopover:before {
-  display: block;
-}
-
 .workspace {
   display: flex;
   width: 100%;
