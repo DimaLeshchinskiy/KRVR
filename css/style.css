@@ -208,6 +208,48 @@ canvas.selected {
   justify-content: space-around;
   flex-direction: row;
   flex: 0.5;
+  position: absolute;
+  z-index: 1000;
+  top: 165px;
+  border: var(--bgHead) solid 1px;
+  border-left: none;
+  padding: 5px;
+  width: fit-content;
+  height: max-content;
+  background-color: var(--bgContent);
+}
+
+.toolsSection>div:first {
+  height: max-content;
+}
+
+.toolsSection.closeSection {
+  padding: 0px;
+}
+
+.toolsSectionToogle:hover {
+  background-color: var(--bgButtonHover);
+}
+
+.toolsSection img {
+  width: 10px;
+  position: inherit;
+  top: 47%;
+}
+
+.toolsSectionToogle {
+  position: absolute;
+  min-height: 164px;
+  height: -webkit-fill-available;
+  width: 14px;
+  border-radius: 0px 10px 10px 0px;
+  background-color: var(--bgButton);
+  left: 52px;
+  top: 0px;
+}
+
+.toolsSection.closeSection .toolsSectionToogle {
+  left: 0px;
 }
 
 .tools {
@@ -219,11 +261,11 @@ canvas.selected {
   top: 5px;
 }
 
-.tools .icon {
+.tool .icon {
   display: flex;
 }
 
-.tools .icon img {
+.tool .icon img {
   margin: 0 auto;
   width: 32px;
   height: 32px;
@@ -231,8 +273,8 @@ canvas.selected {
 
 .tool {
   border-radius: 50px;
-  height: 50px;
-  height: 50px;
+  height: 32px;
+  margin: 5px;
   position: relative;
 }
 

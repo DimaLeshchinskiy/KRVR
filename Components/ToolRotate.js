@@ -16,7 +16,9 @@ class ToolRotate extends React.Component{
   whenChange(num){
     let file = fileManager.getSelected();
     file.angle = -num;
-    this.props.onRotate();
+    fileManager.listener.emit("update");
+
+    this.forceUpdate();
   }
 
   renderNotSelected(){

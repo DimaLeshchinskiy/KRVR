@@ -27,8 +27,7 @@ function createWindow () {
 
   setInterval(
     function(){
-      console.log("test");
-      serial.sendAsync("?");
+      autoUpdater.checkForUpdates();
     }, 1800000); //30min
 }
 

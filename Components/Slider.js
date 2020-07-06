@@ -32,7 +32,7 @@ class Slider extends React.Component{
   }
 
   change(num){
-    config.put(this.props.configName, num * this.state.multiply);
+    config.set(this.props.configName, num * this.state.multiply);
 
     this.setState({value: num});
     this.props.change(num);

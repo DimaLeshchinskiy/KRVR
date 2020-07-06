@@ -7,8 +7,10 @@ var FileManager = require("../Components/FileManager.js");
 var Controls = require("../Components/Controls.js");
 var Console = require("../Components/Console.js");
 var Process = require("../Components/Process.js");
+var ToolsManager = require("../Components/ToolsManager.js");
 
 const leftTabs = [{name: "Settings", item: Settings},
+                  {name: "Tools", item: ToolsManager},
                   {name: "File Manager", item: FileManager},
                   {name: "Process", item: Process}];
 

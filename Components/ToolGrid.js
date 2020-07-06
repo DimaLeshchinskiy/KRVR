@@ -1,6 +1,8 @@
 var React = require("react");
 var Switch = require("../Components/Switch.js");
 
+var config = require("../app/config");
+
 class ToolGrid extends React.Component{
   constructor(props){
     super(props);
@@ -9,21 +11,24 @@ class ToolGrid extends React.Component{
   }
 
   setGrid(isEnable){
-    this.props.toggle(isEnable);
+    config.set("stickyRuler", isEnable);
+    this.forceUpdate(); 
   }
 
   change(event){
     let value = parseFloat(event.target.value);
 
-    if(value.isPositiveNum())
-      this.props.change(value);
+    if(value.isPositiveNum()){
+      config.set("stickyRulerSize", value);
+      this.forceUpdate();
+    }
   }
 
   render(){
 
     return React.createElement(
               "div", null,
-              React.createElement(Switch, { name: "Sticky grid enable", click:this.setGrid, def:this.props.def}),
+              React.createElement(Switch, { name: "Sticky grid enable", click:this.setGrid, def:config.getByKey("stickyRuler")}),
 
               React.createElement(
                 "div",
@@ -41,7 +46,7 @@ class ToolGrid extends React.Component{
                     type: "text",
                     placeholder: "Grid size",
                     onChange: this.change,
-                    value: this.props.size
+                    value: config.getByKey("stickyRulerSize")
                   })
                 )
               )

@@ -16,7 +16,9 @@ class ToolScale extends React.Component{
   whenChange(num){
     let file = fileManager.getSelected();
     file.scale = num;
-    this.props.onScale();
+    fileManager.listener.emit("update");
+
+    this.forceUpdate();
   }
 
   renderNotSelected(){

@@ -1,10 +1,15 @@
 var config = new Map();
+const events = require('events');
+const listener = new events.EventEmitter();
+
+exports.listener = listener;
 
 var MAXPWM = 255;
 
 exports.save = save;
 exports.load = load;
 exports.put = put;
+exports.set = set;
 exports.getByKey = getByKey;
 exports.getPWM = getPWM;
 
@@ -33,6 +38,11 @@ function load(){
 
 function put(key, value){
   config.set(key, value);
+}
+
+function set(key, value){
+  config.set(key, value);
+  listener.emit("configUpdate", config);
 }
 
 function getByKey(key){

@@ -1,14 +1,7 @@
 var React = require("react");
 
-var ToolPopover = require("../Components/ToolPopover.js");
-
 class Tool extends React.Component{
   render(){
-
-    let popContent = [];
-
-    if(this.props.children)
-      popContent = React.createElement(ToolPopover, null, this.props.children);
 
     return React.createElement(
               "div",
@@ -17,8 +10,7 @@ class Tool extends React.Component{
                 "div",
                 { "className": "icon" },
                 React.createElement("img", { src: this.props.src, alt: "" })
-              ),
-              popContent
+              )
             );
   }
 }

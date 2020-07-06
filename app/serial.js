@@ -5,6 +5,7 @@ const parser = new Readline();
 const listener = new events.EventEmitter();
 
 buffer = [];
+asyncReqCount = 0;
 connection = {};
 
 exports.listener = listener;
@@ -48,13 +49,13 @@ function sendToArduino(data){
 function sendToArduinoAsync(cmd){
   if(!isOpen()){
     //showMsg("Ooops", "Port is not connected");
-    console.log(data + " test");
     return;
   }
 
   if(!connection || !connection.isOpen) return;
 
   if(cmd){
+    asyncReqCount++;
     connection.write(cmd + "\n");
   }
 }
@@ -114,7 +115,12 @@ parser.on('data', function(data) {
     writeToArduino();
   }
   else if(data.includes("ok")){
-    writeToArduino();
+    if(asyncReqCount){
+      asyncReqCount--;
+    }else{
+      listener.emit("log", data, "msg");
+      writeToArduino();
+    }
   }
   else if(data.includes("error")){
     listener.emit("log", data, "error");

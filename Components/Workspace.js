@@ -6,12 +6,10 @@ var d2c = require("../app/DXF2CANVAS");
 var config = require("../app/config");
 var serial = require("../app/serial");
 
+var ToolsList = require("../Components/ToolsList.js");
+
 var Tool = require("../Components/Tool.js");
-var ToolGrid = require("../Components/ToolGrid.js");
-var ToolRotate = require("../Components/ToolRotate.js");
-var ToolScale = require("../Components/ToolScale.js");
 var Grid = require("../Components/Grid.js");
-var Slider = require("../Components/Slider.js");
 
 class Workspace extends React.Component{
 
@@ -26,13 +24,6 @@ class Workspace extends React.Component{
     this.drop = this.drop.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
 
-    this.gridToggle = this.gridToggle.bind(this);
-    this.gridSizeChange = this.gridSizeChange.bind(this);
-
-    this.onZoom = this.onZoom.bind(this);
-    this.onScale = this.onScale.bind(this);
-    this.onRotate = this.onRotate.bind(this);
-
     this.onSelect = this.onSelect.bind(this);
 
     this.renderLaser = this.renderLaser.bind(this);
@@ -43,6 +34,11 @@ class Workspace extends React.Component{
 
     fileManager.listener.on("update", this.onSelect);
     serial.listener.on("position", this.renderLaser);
+    config.listener.on("configUpdate", (new_config)=>{
+      let bool = new_config.get("stickyRuler");
+      let num = new_config.get("stickyRulerSize");
+      this.setState({stickyGrid: bool, stickyGridSize: num});
+    });
   }
 
   componentDidMount() {
@@ -58,9 +54,8 @@ class Workspace extends React.Component{
 
     setInterval(
       function(){
-        console.log("test");
         serial.sendAsync("?");
-      }, 3000);
+      }, 100);
   }
 
   componentDidUpdate() {
@@ -68,7 +63,7 @@ class Workspace extends React.Component{
 
     let space = this.spaceRef.current;
 
-    while (space.childNodes.length > 1) {
+    while (space.childNodes.length > 2) {
         space.removeChild(space.lastChild);
     }
 
@@ -109,26 +104,6 @@ class Workspace extends React.Component{
     }
   }
 
-  gridToggle(isEnable){
-    this.setState({stickyGrid: isEnable});
-  }
-
-  gridSizeChange(size){
-    this.setState({stickyGridSize: size});
-  }
-
-  onZoom(){
-    this.forceUpdate();
-  }
-
-  onScale(){
-    this.forceUpdate();
-  }
-
-  onRotate(){
-    this.forceUpdate();
-  }
-
   onSelect(){
     this.forceUpdate();
   }
@@ -151,36 +126,18 @@ class Workspace extends React.Component{
                 "div",
                 { "className": "tools" },
                 React.createElement(Tool,{ name: "Open Sidebar", src: "../assets/img/menu.svg", click: this.props.toggleLeft}),
-                React.createElement(
-                  "div",
-                  { "className": "toolsSection" },
-                  React.createElement(Tool,
-                    {src: "../assets/img/grid.svg"},
-                    React.createElement(ToolGrid, {change: this.gridSizeChange, toggle: this.gridToggle, def: this.state.stickyGrid, size: this.state.stickyGridSize}),
-                  ),
-                  React.createElement(Tool,
-                    {src: "../assets/img/zoom.svg"},
-                    React.createElement(Slider, {head: "Zoom", template: "{val}", min: 1, max: 2.5, step:0.5, multiply:4.5, configName:"ScreenS", change: this.onZoom})
-                  ),
-                  React.createElement(Tool,
-                    {src: "../assets/img/scale.svg"},
-                    React.createElement(ToolScale, {onScale: this.onScale})
-                  ),
-                  React.createElement(Tool,
-                    {src: "../assets/img/rotate.svg"},
-                    React.createElement(ToolRotate, {onRotate: this.onRotate})
-                  )
-                ),
+                //React.createElement(ToolsList),
                 React.createElement(Tool,{ name: "Open Sidebar", src: "../assets/img/menu.svg", click: this.props.toggleRight}),
               ),
+              React.createElement(ToolsList),
               React.createElement(
                 "div",
                 { "className": "workspace", ref:this.workspaceRef },
                 React.createElement(
                   "div",
                   { "className": "space", ref:this.spaceRef },
-                  React.createElement("div", { "className": "laser", ref:this.laserRef }),
-                  React.createElement(Grid, { render: this.state.stickyGrid, size:this.state.stickyGridSize })
+                  React.createElement(Grid, { render: this.state.stickyGrid, size:this.state.stickyGridSize }),
+                  React.createElement("div", { "className": "laser", ref:this.laserRef })
                 )
               )
             );
@@ -270,7 +227,7 @@ class Workspace extends React.Component{
 
   //laser visualisation
   renderLaser(str){
-    console.log(str);
+    //console.log(str);
     //str = <Idle|MPos:10.000,10.000,0.000|FS:0,0|Pn:XYZ>
     let pos3D = str.split("|")[1];
     //pos3D = MPos:10.000,10.000,0.000
@@ -283,7 +240,7 @@ class Workspace extends React.Component{
     let height = config.getByKey("ScreenH");
 
     for (var i = 0; i < pos3D.length; i++) {
-      pos3D[i] = parseFloat(pos3D[i]) / scale;
+      pos3D[i] = parseFloat(pos3D[i]);
     }
 
     let x = pos3D[0] * scale - (laser.offsetWidth / 2);
