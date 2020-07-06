@@ -29,8 +29,8 @@ class Grid extends React.Component{
   renderGrid(canvas){
     let size = this.props.size;
     let scale = config.getByKey("ScreenS");
-    let height = config.getByKey("ScreenH");
-    let width = config.getByKey("ScreenW");
+    let height = config.getDevY();
+    let width = config.getDevX();
 
     let ctx = canvas.getContext("2d");
 

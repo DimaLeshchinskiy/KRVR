@@ -75,7 +75,7 @@ class Workspace extends React.Component{
       cnv.style.transform = `rotate(${file.angle}deg)`;
 
       let left = (file.offsetX - file.centerX * file.scale) * config.getByKey("ScreenS");
-      let top = (config.getByKey("ScreenH") - (file.offsetY + file.centerY * file.scale)) * config.getByKey("ScreenS");
+      let top = (config.getDevY() - (file.offsetY + file.centerY * file.scale)) * config.getByKey("ScreenS");
 
       if(file.equals(fileManager.getSelected())){
         cnv.classList.add("selected");
@@ -204,7 +204,7 @@ class Workspace extends React.Component{
     let height = file.centerY * file.scale * config.getByKey("ScreenS");
 
     file.offsetX = itemX / config.getByKey("ScreenS");
-    file.offsetY = config.getByKey("ScreenH") - itemY / config.getByKey("ScreenS");
+    file.offsetY = config.getDevY() - itemY / config.getByKey("ScreenS");
 
     itemY = itemY - height;
     itemX = itemX - width;
@@ -218,8 +218,8 @@ class Workspace extends React.Component{
   }
   resize(dom){
     let scale = config.getByKey("ScreenS");
-    let height = config.getByKey("ScreenH");
-    let width = config.getByKey("ScreenW");
+    let height = config.getDevY();
+    let width = config.getDevX();
 
     dom.style.minHeight = (height * scale) + "px";
     dom.style.minWidth = (width * scale) + "px";
@@ -237,7 +237,7 @@ class Workspace extends React.Component{
 
     let laser = this.laserRef.current;
     let scale = config.getByKey("ScreenS");
-    let height = config.getByKey("ScreenH");
+    let height = config.getDevY();
 
     for (var i = 0; i < pos3D.length; i++) {
       pos3D[i] = parseFloat(pos3D[i]);

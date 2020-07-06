@@ -2,6 +2,7 @@ var React = require("react");
 
 var SelectPort = require("../Components/SelectPort.js");
 var Switch = require("../Components/Switch.js");
+var ButtonDialog = require("../Components/ButtonDialog.js");
 
 const config = require('../app/config');
 
@@ -37,12 +38,13 @@ class Settings extends React.Component{
     return React.createElement(
               "div",
               { "className": "content" },
-              
+
               React.createElement(Switch,
                 { name: "Darkmode enable", click:this.setDarkmode, def:config.getByKey("darkmode") }
               ),
 
-              React.createElement(SelectPort)
+              React.createElement(SelectPort),
+              React.createElement(ButtonDialog, { color: "blue", title: "Change device model"})
             );
   }
 }

@@ -29,6 +29,9 @@
   const config = require('../app/config');
   config.load();
 
+  const deviceService = require('../app/deviceService');
+  deviceService.load();
+
   const React = require('react');
   const ReactDOM = require('react-dom');
   const App = require("../Components/App.js");

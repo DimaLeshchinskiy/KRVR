@@ -13,6 +13,10 @@ exports.set = set;
 exports.getByKey = getByKey;
 exports.getPWM = getPWM;
 
+exports.getDevX = getDevX;
+exports.getDevY = getDevY;
+exports.getDevZ = getDevZ;
+
 function save(){
   console.err("Function save in config.js is not ready");
 }
@@ -22,6 +26,8 @@ function getPWM(){
 }
 
 function load(){
+  put("device", null);
+
   put("feed", 10);
   put("pwm", 100);
   put("step", 10);
@@ -31,8 +37,6 @@ function load(){
   put("stickyRuler", false);
   put("stickyRulerSize", 10);
 
-  put("ScreenH", 140);
-  put("ScreenW", 220);
   put("ScreenS", 4.5);
 }
 
@@ -47,4 +51,16 @@ function set(key, value){
 
 function getByKey(key){
   return config.get(key);
+}
+
+function getDevY(){
+  return config.get("device").maxY;
+}
+
+function getDevX(){
+  return config.get("device").maxX;
+}
+
+function getDevZ(){
+  return config.get("device").maxZ;
 }

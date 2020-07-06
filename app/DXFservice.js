@@ -113,8 +113,8 @@ exports.getDxf = function(file){
     file.centerX = file.width / 2;
     file.centerY = file.height / 2;
 
-    screenY = config.getByKey("ScreenH");
-    screenX = config.getByKey("ScreenW");
+    screenY = config.getDevY();
+    screenX = config.getDevX();
 
     file.offsetY = screenY / 2;
     file.offsetX = screenX / 2;
