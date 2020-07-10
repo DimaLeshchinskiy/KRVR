@@ -45,7 +45,7 @@ class ToolsList extends React.Component{
                 React.createElement(Tool, {src: "../assets/img/grid.svg", click: this.onGridClick}),
                 React.createElement(Tool, {src: "../assets/img/zoom.svg", click: this.onZoomClick}),
                 React.createElement(Tool, {src: "../assets/img/scale.svg", click: this.onScaleClick}),
-                React.createElement(Tool, {src: "../assets/img/rotate.svg", click: this.onRotateClick}),
+                React.createElement(Tool, {src: "../assets/img/rotate.svg", click: this.onRotateClick})
               ),
               React.createElement("div", { "className": "toolsSectionToogle", onClick:this.toogle},
                 React.createElement("img", {src: "../assets/img/arr-left.png"})
@@ -54,14 +54,26 @@ class ToolsList extends React.Component{
   }
 
   get3D(){
-
+    return React.createElement(
+              "div",
+              { "className": "toolsSection" },
+              React.createElement("div", null,
+              React.createElement(Tool, {src: "../assets/img/grid.svg", click: this.onGridClick}),
+              React.createElement(Tool, {src: "../assets/img/zoom.svg", click: this.onZoomClick}),
+              React.createElement(Tool, {src: "../assets/img/scale.svg", click: this.onScaleClick}),
+              React.createElement(Tool, {src: "../assets/img/rotate.svg", click: this.onRotateClick})
+              ),
+              React.createElement("div", { "className": "toolsSectionToogle", onClick:this.toogle},
+                React.createElement("img", {src: "../assets/img/arr-left.png"})
+              )
+            );
   }
 
   render(){
 
     if(!this.state.toogle)
       return this.getClose();
-    if(this.props.is3D)
+    if(this.props.dimension == "3d")
       return this.get3D();
     else
       return this.get2D();

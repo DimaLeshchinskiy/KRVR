@@ -290,6 +290,10 @@ canvas.selected {
   position: relative;
 }
 
+.space3D {
+  position: relative;
+}
+
 .laser {
   width: 6px;
   height: 6px;
@@ -326,4 +330,14 @@ canvas.selected {
   margin-right: 0px;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* dimension Select */
+.dimensionSelect {
+  width: 250px;
+  margin-top: 3px;
+}
+
+.dimensionSelect>label {
+  margin-bottom: auto !important;
 }

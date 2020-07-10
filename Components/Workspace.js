@@ -4,10 +4,11 @@ var fileManager = require("../app/fileManager");
 var flm = require("../app/fileLoadModule");
 var d2c = require("../app/DXF2CANVAS");
 var config = require("../app/config");
-var serial = require("../app/serial");
+
+var TwoDimensions = require("../Components/TwoDimensions.js");
+var ThreeDimensions = require("../Components/ThreeDimensions.js");
 
 var ToolsList = require("../Components/ToolsList.js");
-
 var Tool = require("../Components/Tool.js");
 var Grid = require("../Components/Grid.js");
 
@@ -17,33 +18,18 @@ class Workspace extends React.Component{
     super(props);
 
     this.state = {
-      stickyGrid: false,
-      stickyGridSize: 10
+      dimension:"2d"
     };
 
     this.drop = this.drop.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
 
-    this.onSelect = this.onSelect.bind(this);
+    this.onDimensionChange = this.onDimensionChange.bind(this);
 
-    this.renderLaser = this.renderLaser.bind(this);
-
-    this.spaceRef = React.createRef();
     this.workspaceRef = React.createRef();
-    this.laserRef = React.createRef();
-
-    fileManager.listener.on("update", this.onSelect);
-    serial.listener.on("position", this.renderLaser);
-    config.listener.on("configUpdate", (new_config)=>{
-      let bool = new_config.get("stickyRuler");
-      let num = new_config.get("stickyRulerSize");
-      this.setState({stickyGrid: bool, stickyGridSize: num});
-    });
   }
 
   componentDidMount() {
-    this.resize(this.spaceRef.current);
-
     let workspace = this.workspaceRef.current;
     let body = document.body,
         html = document.documentElement;
@@ -51,65 +37,25 @@ class Workspace extends React.Component{
     let height = Math.max( body.scrollHeight, body.offsetHeight,
                            html.clientHeight, html.scrollHeight, html.offsetHeight );
     workspace.style.height = (height - 50) + "px";
-
-    setInterval(
-      function(){
-        serial.sendAsync("?");
-      }, 100);
   }
 
-  componentDidUpdate() {
-    this.resize(this.spaceRef.current);
-
-    let space = this.spaceRef.current;
-
-    while (space.childNodes.length > 2) {
-        space.removeChild(space.lastChild);
-    }
-
-    let files = fileManager.getAll();
-    for (let i = 0; i < files.length; i++) {
-      let file = files[i];
-      let cnv = d2c.getCanvas(file);
-      cnv.draggable = true;
-      cnv.style.transform = `rotate(${file.angle}deg)`;
-
-      let left = (file.offsetX - file.centerX * file.scale) * config.getByKey("ScreenS");
-      let top = (config.getDevY() - (file.offsetY + file.centerY * file.scale)) * config.getByKey("ScreenS");
-
-      if(file.equals(fileManager.getSelected())){
-        cnv.classList.add("selected");
-        left--;
-        top--;
-      }
-
-      cnv.style.left = left + "px";
-      cnv.style.top = top + "px";
-
-      cnv.addEventListener("dragover", function(event){
-        event.preventDefault();
-      });
-
-      cnv.addEventListener("dragend", this.dragEnd);
-
-      cnv.addEventListener("click", (event) =>{
-        let cnv = event.target;
-        let id = cnv.getAttribute("dataId");
-        let file = fileManager.getById(id);
-
-        fileManager.select(file);
-      });
-
-      space.appendChild(cnv);
-    }
+  getDimension(){
+    if(this.state.dimension == "2d")
+      return React.createElement(TwoDimensions);
+    else
+      return React.createElement(ThreeDimensions);
   }
 
-  onSelect(){
-    this.forceUpdate();
+  onDimensionChange(evt){
+    let dimension = evt.target.getAttribute("data");
+    if(dimension)
+      this.setState({dimension:dimension});
   }
 
   render(){
     let classNames = ["main"];
+
+    let dimension = this.getDimension();
 
     if(this.props.isLeftOpen){
       classNames.push("openLeft");
@@ -126,19 +72,29 @@ class Workspace extends React.Component{
                 "div",
                 { "className": "tools" },
                 React.createElement(Tool,{ name: "Open Sidebar", src: "../assets/img/menu.svg", click: this.props.toggleLeft}),
-                //React.createElement(ToolsList),
+                React.createElement(
+                  "div",
+                  { "className": "btn-group btn-group-toggle dimensionSelect", "data-toggle": "buttons" },
+                  React.createElement(
+                    "label",
+                    { "className": "btn btn-sm btn-outline-primary active", data:"2d", onClick: this.onDimensionChange},
+                    React.createElement("input", { type: "radio", name: "options", id: "option1", autoComplete: "off", defaultChecked: true }),
+                    "2D"
+                  ),
+                  React.createElement(
+                    "label",
+                    { "className": "btn btn-sm btn-outline-primary", data:"3d", onClick: this.onDimensionChange},
+                    React.createElement("input", { type: "radio", name: "options", id: "option2", autoComplete: "off" }),
+                    "3D"
+                  )
+                ),
                 React.createElement(Tool,{ name: "Open Sidebar", src: "../assets/img/menu.svg", click: this.props.toggleRight}),
               ),
-              React.createElement(ToolsList),
+              React.createElement(ToolsList, {dimension: this.state.dimension}),
               React.createElement(
                 "div",
                 { "className": "workspace", ref:this.workspaceRef },
-                React.createElement(
-                  "div",
-                  { "className": "space", ref:this.spaceRef },
-                  React.createElement(Grid, { render: this.state.stickyGrid, size:this.state.stickyGridSize }),
-                  React.createElement("div", { "className": "laser", ref:this.laserRef })
-                )
+                dimension
               )
             );
   }
@@ -216,41 +172,7 @@ class Workspace extends React.Component{
 
     fileManager.select(file);
   }
-  resize(dom){
-    let scale = config.getByKey("ScreenS");
-    let height = config.getDevY();
-    let width = config.getDevX();
 
-    dom.style.minHeight = (height * scale) + "px";
-    dom.style.minWidth = (width * scale) + "px";
-  }
-
-  //laser visualisation
-  renderLaser(str){
-    //console.log(str);
-    //str = <Idle|MPos:10.000,10.000,0.000|FS:0,0|Pn:XYZ>
-    let pos3D = str.split("|")[1];
-    //pos3D = MPos:10.000,10.000,0.000
-    pos3D = pos3D.split(":")[1];
-    //pos3D = 10.000,10.000,0.000
-    pos3D = pos3D.split(",");
-
-    let laser = this.laserRef.current;
-    let scale = config.getByKey("ScreenS");
-    let height = config.getDevY();
-
-    for (var i = 0; i < pos3D.length; i++) {
-      pos3D[i] = parseFloat(pos3D[i]);
-    }
-
-    let x = pos3D[0] * scale - (laser.offsetWidth / 2);
-    let y = (height - pos3D[1]) * scale - (laser.offsetWidth / 2);
-    let z = pos3D[2];
-
-    laser.style.left = x + "px";
-    laser.style.top = y + "px";
-
-  }
 }
 
 module.exports = Workspace;
