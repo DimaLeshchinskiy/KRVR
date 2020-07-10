@@ -129,7 +129,7 @@ class ThreeDimensions extends React.Component{
     let toolHeight = 100;
 
     let x = (_state.getX() - config.getDevX() / 2) * config.getByKey("ScreenS");
-    let y = (_state.getY() + config.getDevY() / 2) * config.getByKey("ScreenS");
+    let y = (-_state.getY() + config.getDevY() / 2) * config.getByKey("ScreenS");
     let z = _state.getZ() * config.getByKey("ScreenS")  + toolHeight / 2;
 
     var geometryLaser = new THREE.BoxGeometry(20, toolHeight, 20);
