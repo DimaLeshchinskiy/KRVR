@@ -5,6 +5,7 @@ var ButtonLG = require("../Components/ButtonLG.js");
 var fileManager = require("../app/fileManager");
 var dxf2g = require("../app/DXF2GC");
 var png2g = require("../app/PNG2GC");
+var gcode2g = require("../app/GCODE2GC");
 var serial = require("../app/serial");
 
 class Process extends React.Component{
@@ -32,6 +33,8 @@ class Process extends React.Component{
         gcode = png2g.getGcode(file);
       else if(file.extension == "dxf")
         gcode = dxf2g.getGcode(file);
+      else if(file.extension == "gcode")
+        gcode = gcode2g.getGcode(file);
 
       console.log(gcode);
     }

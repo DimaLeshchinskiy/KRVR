@@ -2,9 +2,10 @@ const pathModule = require('path')
 const fsModule = require('fs');
 const dxfService = require('../app/DXFservice');
 const pngService = require('../app/PNGservice');
+const gcodeService = require('../app/GCODEservice');
 const config = require('../app/config');
 
-const extensions = [".dxf", ".png"];
+const extensions = [".dxf", ".png", ".gcode"];
 
 var pathToFile = "";
 var extension = "";
@@ -31,6 +32,10 @@ exports.getFile = function(){
   if(extension == ".png"){
     let file = new FileModel(pathToFile, extension);
     return pngService.getPng(file);
+  }
+  if(extension == ".gcode"){
+    let file = new FileModel(pathToFile, extension, 'utf-8');
+    return gcodeService.getGcode(file);
   }
 
   return null;
