@@ -47,7 +47,7 @@ class ThreeDimensions extends React.Component{
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 		root.appendChild(this.renderer.domElement);
 
-		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000);
+		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200000);
 		this.camera.position.set(0, 900, 900);
 
 		// this.controls

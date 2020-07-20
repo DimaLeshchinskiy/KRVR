@@ -1,7 +1,8 @@
 const React = require("react");
 
 var fileManager = require("../app/fileManager");
-var d2c = require("../app/DXF2CANVAS");
+var dxf2c = require("../app/DXF2CANVAS");
+var png2c = require("../app/PNG2CANVAS");
 var config = require("../app/config");
 var _state = require("../app/state");
 
@@ -18,6 +19,8 @@ class TwoDimensions extends React.Component{
     };
 
     this.onSelect = this.onSelect.bind(this);
+
+    this.dragEnd = this.dragEnd.bind(this);
 
     this.renderLaser = this.renderLaser.bind(this);
 
@@ -61,7 +64,13 @@ class TwoDimensions extends React.Component{
     let files = fileManager.getAll();
     for (let i = 0; i < files.length; i++) {
       let file = files[i];
-      let cnv = d2c.getCanvas(file);
+
+      let cnv = {};
+      if(file.extension == "dxf")
+        cnv = dxf2c.getCanvas(file);
+      else if(file.extension == "png")
+        cnv = png2c.getCanvas(file);
+
       cnv.draggable = true;
       cnv.style.transform = `rotate(${file.angle}deg)`;
 
@@ -120,7 +129,7 @@ class TwoDimensions extends React.Component{
   //laser visualisation
   renderLaser(pos3D){
     if(!this._isMounted) return;
-    
+
     let laser = this.laserRef.current;
     let scale = config.getByKey("ScreenS");
     let height = config.getDevY();
@@ -133,6 +142,50 @@ class TwoDimensions extends React.Component{
     laser.style.top = y + "px";
 
   }
+
+
+    dragEnd(event){
+      let itemX = 0;
+      let itemY = 0;
+      let item = event.target;
+
+      let dom = document.getElementsByClassName("space")[0];
+      let left = dom.offsetLeft - dom.parentNode.scrollLeft;
+      let top = dom.offsetTop - dom.parentNode.scrollTop;
+
+      if(this.state.stickyGrid && this.state.stickyGridSize.isPositiveNum()){
+        let size = this.state.stickyGridSize;
+        let scale = config.getByKey("ScreenS");
+
+        let posX = (event.pageX - left) / scale;
+        let posY = (event.pageY - top) / scale;
+
+        itemX = Math.round(posX / size) * size * scale;
+        itemY = Math.round(posY / size) * size * scale;
+      }else{
+        itemX = event.pageX - left;
+        itemY = event.pageY - top;
+      }
+
+      let id = item.getAttribute("dataId");
+      let file = fileManager.getById(id);
+
+      let width = file.centerX * file.scale * config.getByKey("ScreenS");
+      let height = file.centerY * file.scale * config.getByKey("ScreenS");
+
+      file.offsetX = itemX / config.getByKey("ScreenS");
+      file.offsetY = config.getDevY() - itemY / config.getByKey("ScreenS");
+
+      itemY = itemY - height;
+      itemX = itemX - width;
+
+      item.style.top = itemY + "px";
+      item.style.left = itemX + "px";
+
+      console.log(file);
+
+      fileManager.select(file);
+    }
 }
 
 module.exports = TwoDimensions;

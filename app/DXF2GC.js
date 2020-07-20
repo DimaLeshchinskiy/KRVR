@@ -1,7 +1,5 @@
-const pars = require("dxf-parser");
 const config = require("../app/config");
 const util = require("../app/util");
-const parser = new pars();
 
 var scale = 1;
 

@@ -26,6 +26,7 @@ exports.adZ = (addZ) => {position[2] += addZ};
 exports.print = () => {console.log(position)};
 
 serial.listener.on("position", (str)=>{
+  console.log(str);
   //str = <Idle|MPos:10.000,10.000,0.000|FS:0,0|Pn:XYZ>
   let pos3D = str.split("|")[1];
   //pos3D = MPos:10.000,10.000,0.000

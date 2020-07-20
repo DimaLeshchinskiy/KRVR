@@ -38,6 +38,8 @@ function load(){
   put("stickyRulerSize", 10);
 
   put("ScreenS", 4.5);
+
+  put("material", null);
 }
 
 function put(key, value){

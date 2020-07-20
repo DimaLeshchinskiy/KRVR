@@ -22,7 +22,6 @@ class Workspace extends React.Component{
     };
 
     this.drop = this.drop.bind(this);
-    this.dragEnd = this.dragEnd.bind(this);
 
     this.onDimensionChange = this.onDimensionChange.bind(this);
 
@@ -128,49 +127,6 @@ class Workspace extends React.Component{
       console.log(fileManager.getAll());
       this.forceUpdate();
     }
-  }
-
-  dragEnd(event){
-    let itemX = 0;
-    let itemY = 0;
-    let item = event.target;
-
-    let dom = document.getElementsByClassName("space")[0];
-    let left = dom.offsetLeft - dom.parentNode.scrollLeft;
-    let top = dom.offsetTop - dom.parentNode.scrollTop;
-
-    if(this.state.stickyGrid && this.state.stickyGridSize.isPositiveNum()){
-      let size = this.state.stickyGridSize;
-      let scale = config.getByKey("ScreenS");
-
-      let posX = (event.pageX - left) / scale;
-      let posY = (event.pageY - top) / scale;
-
-      itemX = Math.round(posX / size) * size * scale;
-      itemY = Math.round(posY / size) * size * scale;
-    }else{
-      itemX = event.pageX - left;
-      itemY = event.pageY - top;
-    }
-
-    let id = item.getAttribute("dataId");
-    let file = fileManager.getById(id);
-
-    let width = file.centerX * file.scale * config.getByKey("ScreenS");
-    let height = file.centerY * file.scale * config.getByKey("ScreenS");
-
-    file.offsetX = itemX / config.getByKey("ScreenS");
-    file.offsetY = config.getDevY() - itemY / config.getByKey("ScreenS");
-
-    itemY = itemY - height;
-    itemX = itemX - width;
-
-    item.style.top = itemY + "px";
-    item.style.left = itemX + "px";
-
-    console.log(file);
-
-    fileManager.select(file);
   }
 
 }
