@@ -59,6 +59,8 @@ class Process extends React.Component{
           gcode = png2g.getGcode(file);
         else if(file.extension == "dxf")
           gcode = dxf2g.getGcode(file);
+        else if(file.extension == "gcode")
+          gcode = gcode2g.getGcode(file);
 
         console.log(gcode);
 
