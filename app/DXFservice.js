@@ -68,7 +68,7 @@ function roundNumber(num) {
 }
 
 
-exports.getDxf = function(file){
+exports.getDxf = async function(file){
 
   maxX = 0;
   maxY = 0;

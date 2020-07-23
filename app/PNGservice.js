@@ -20,7 +20,7 @@ function grayscale(png){
   return png;
 }
 
-exports.getPng = function (file){
+exports.getPng = async function (file){
   let png = PNGJS.sync.read(file.data);
   file.data = grayscale(png);
 

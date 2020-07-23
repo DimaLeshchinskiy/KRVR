@@ -8,6 +8,7 @@ exports.push = push;
 exports.remove = remove;
 exports.getById = getById;
 exports.getAll = getAll;
+exports.getLast = getLast;
 exports.listener = listener;
 exports.select = select;
 exports.getSelected = getSelected;
@@ -58,4 +59,8 @@ function getById(id){
 
 function getAll(){
   return manager;
+}
+
+function getLast(){
+  return manager[manager.length - 1];
 }

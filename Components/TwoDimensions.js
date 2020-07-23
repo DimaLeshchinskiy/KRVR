@@ -70,6 +70,8 @@ class TwoDimensions extends React.Component{
         cnv = dxf2c.getCanvas(file);
       else if(file.extension == "png")
         cnv = png2c.getCanvas(file);
+      else
+        continue;
 
       cnv.draggable = true;
       cnv.style.transform = `rotate(${file.angle}deg)`;

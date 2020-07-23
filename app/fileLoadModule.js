@@ -3,12 +3,18 @@ const fsModule = require('fs');
 const dxfService = require('../app/DXFservice');
 const pngService = require('../app/PNGservice');
 const gcodeService = require('../app/GCODEservice');
+const stlService = require('../app/STLservice');
 const config = require('../app/config');
+var fileManager = require("../app/fileManager");
 
-const extensions = [".dxf", ".png", ".gcode"];
+const extensions = [".dxf", ".png", ".gcode", ".stl"];
 
 var pathToFile = "";
 var extension = "";
+
+function pushNewToFileManager(file){
+  fileManager.push(file);
+}
 
 exports.setPath = function(path){
 
@@ -22,31 +28,34 @@ exports.setPath = function(path){
   return false;
 }
 
-exports.getFile = function(){
+exports.getFile = async function(){
   if(!pathToFile) return null;
 
   if(extension == ".dxf"){
     let file = new FileModel(pathToFile, extension, 'utf-8');
-    return dxfService.getDxf(file);
+    dxfService.getDxf(file).then(pushNewToFileManager);
   }
   if(extension == ".png"){
     let file = new FileModel(pathToFile, extension);
-    return pngService.getPng(file);
+    pngService.getPng(file).then(pushNewToFileManager);
   }
   if(extension == ".gcode"){
     let file = new FileModel(pathToFile, extension, 'utf-8');
-    return gcodeService.getGcode(file);
+    gcodeService.getGcode(file).then(pushNewToFileManager);
   }
-
-  return null;
+  if(extension == ".stl"){
+    let file = new FileModel(pathToFile, extension, null, false);
+    stlService.getStl(file).then(pushNewToFileManager);
+  }
 }
 
 class FileModel{
-  constructor(path, extension, encoding = null) {
+  constructor(path, extension, encoding = null, autoload = true) {
     //something like "head"
     this.path = path;
     this.extension = extension.substring(1);
-    this.data = fsModule.readFileSync(this.path, encoding); //at first here were data from file, after service put here parsed data
+    if(autoload)
+      this.data = fsModule.readFileSync(this.path, encoding); //at first here were data from file, after service put here parsed data
     this.id = Date.now(); //id == time of upload in miliseconds
 
     //used for dxf

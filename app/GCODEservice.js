@@ -1,4 +1,4 @@
-exports.getGcode = function(file){
+exports.getGcode = async function(file){
 
   file.data = file.data.split("\n");
 

@@ -113,19 +113,19 @@ class Workspace extends React.Component{
       e.preventDefault();
       e.stopPropagation();
 
+      let promises = [];
+
       let filesDropped = e.dataTransfer.files;
       for (let i = 0; i < filesDropped.length; i++) {
         if (flm.setPath(filesDropped[i].path)) {
-          let file = flm.getFile();
-
-          fileManager.push(file);
+          promises.push(flm.getFile());
         }
       }
 
-      fileManager.select(fileManager.getAll()[0]);
-
-      console.log(fileManager.getAll());
-      this.forceUpdate();
+      Promise.allSettled(promises).then(function(){
+        console.log(fileManager.getAll());
+        fileManager.select(fileManager.getLast());
+      });
     }
   }
 
