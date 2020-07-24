@@ -19,7 +19,7 @@ THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			try {
 
-				onLoad( scope.parse( text ) );
+				onLoad( scope.parse(text) );
 
 			} catch ( e ) {
 

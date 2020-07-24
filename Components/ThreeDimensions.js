@@ -1,6 +1,6 @@
 const React = require("react");
 
-var fileManager = require("../app/fileManager");;
+var fileManager = require("../app/fileManager");
 var config = require("../app/config");
 var _state = require("../app/state");
 
@@ -15,6 +15,8 @@ class ThreeDimensions extends React.Component{
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
     this.update = this.update.bind(this);
+    this.onSelect = this.onSelect.bind(this);
+    this.renderFiles = this.renderFiles.bind(this);
     this.generateWorkspace = this.generateWorkspace.bind(this);
     this.generateLaser = this.generateLaser.bind(this);
 
@@ -35,6 +37,8 @@ class ThreeDimensions extends React.Component{
 
   componentDidMount() {
     this._isMounted = true;
+
+    console.log("mount");
     let root = this.spaceRef.current;
 
 		this.scene = new THREE.Scene();
@@ -72,6 +76,9 @@ class ThreeDimensions extends React.Component{
     this.generateLaser();
     this.scene.add(this.meshLaser);
 
+    //files
+    this.renderFiles();
+
 		// lights
 		var light = new THREE.DirectionalLight(0xffffff);
 		light.position.set(1, 1, 1);
@@ -90,18 +97,25 @@ class ThreeDimensions extends React.Component{
 
     config.listener.on("configUpdate", this.update);
     _state.listener.on("change", this.update);
+    fileManager.listener.on("update", this.onSelect);
   }
 
   componentDidUpdate() {
+
+    console.log(this.scene.children);
+    //files
+    this.renderFiles();
+
     // workspace
     this.scene.remove(this.meshWorkspace);
     this.generateWorkspace();
 		this.scene.add(this.meshWorkspace);
 
-    // workspace
+    // laser
     this.scene.remove(this.meshLaser);
     this.generateLaser();
 		this.scene.add(this.meshLaser);
+
   }
 
   render(){
@@ -154,6 +168,7 @@ class ThreeDimensions extends React.Component{
 	}
 
 	animate() {
+    if(!this._isMounted) return;
 		requestAnimationFrame(this.animate);
 		this.controls.update();
 		this.renderer.render(this.scene, this.camera);
@@ -162,6 +177,28 @@ class ThreeDimensions extends React.Component{
   update(){
     if(!this._isMounted) return;
     this.forceUpdate();
+  }
+
+  onSelect(){
+    if(!this._isMounted) return;
+    this.forceUpdate();
+  }
+
+  renderFiles(){
+    //file render
+    let files = fileManager.getAll();
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+
+      let mesh = {};
+      if(file.extension == "stl")
+        mesh = file.data;
+      else continue;
+
+      console.log(mesh);
+
+      this.scene.add(mesh);
+    }
   }
 }
 

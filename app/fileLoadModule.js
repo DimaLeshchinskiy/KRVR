@@ -31,22 +31,26 @@ exports.setPath = function(path){
 exports.getFile = async function(){
   if(!pathToFile) return null;
 
+  let new_file = {};
+
   if(extension == ".dxf"){
     let file = new FileModel(pathToFile, extension, 'utf-8');
-    dxfService.getDxf(file).then(pushNewToFileManager);
+    new_file = await dxfService.getDxf(file);
   }
   if(extension == ".png"){
     let file = new FileModel(pathToFile, extension);
-    pngService.getPng(file).then(pushNewToFileManager);
+    new_file = await pngService.getPng(file);
   }
   if(extension == ".gcode"){
     let file = new FileModel(pathToFile, extension, 'utf-8');
-    gcodeService.getGcode(file).then(pushNewToFileManager);
+    new_file = await gcodeService.getGcode(file);
   }
   if(extension == ".stl"){
     let file = new FileModel(pathToFile, extension, null, false);
-    stlService.getStl(file).then(pushNewToFileManager);
+    new_file = await stlService.getStl(file);
   }
+
+  pushNewToFileManager(new_file);
 }
 
 class FileModel{
