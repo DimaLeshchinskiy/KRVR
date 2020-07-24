@@ -57,6 +57,7 @@ class FileModel{
   constructor(path, extension, encoding = null, autoload = true) {
     //something like "head"
     this.path = path;
+    this.name = pathModule.parse(path).base;
     this.extension = extension.substring(1);
     if(autoload)
       this.data = fsModule.readFileSync(this.path, encoding); //at first here were data from file, after service put here parsed data
@@ -67,6 +68,14 @@ class FileModel{
     this.minY = 0;
     this.maxX = 0;
     this.maxY = 0;
+
+    //used for 3D
+    this.angleX3D = 0;
+    this.angleY3D = 0;
+    this.angleZ3D = 0;
+    this.X3D = 0;
+    this.Y3D = 0;
+    this.Z3D = 0;
 
     //for all
     this.height = 0;

@@ -6,12 +6,14 @@ async function load(path) {
 
     loader.load(path, function ( geometry ) {
 
+      geometry.center();
+
       let material = new THREE.MeshNormalMaterial({
   			color: 0xffffff
   		});
       let mesh = new THREE.Mesh( geometry, material );
 
-      mesh.position.set(100, 100, 100);
+      mesh.position.set(0, 0, 0);
       mesh.updateMatrix();
   		mesh.matrixAutoUpdate = false;
 
@@ -23,7 +25,9 @@ async function load(path) {
 
 exports.getStl = async function(file){
 
-  file.data = await load(file.path);
+  let mesh = await load(file.path);
+  mesh.userData.id = file.id;
+  file.data = mesh;
 
   return file;
 }

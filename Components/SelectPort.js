@@ -92,7 +92,7 @@ class SelectPort extends React.Component{
     return React.createElement("div", null,
               React.createElement(
                 "select",
-                { "className": "ports", value: this.state.setIndex, onChange:this.handleChange},
+                { "className": "form-control", value:this.state.setIndex, onChange:this.handleChange},
                 options
               ),
               React.createElement( ButtonLG, { color: "blue", name: "Scan for ports", click: this.scan })

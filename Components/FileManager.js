@@ -30,7 +30,7 @@ class FileManager extends React.Component{
 
       list.push(
             React.createElement("li",{"dataid": file.id, key:file.id, onClick:this.onFileSelect, "className": "list-group-item d-flex justify-content-between align-items-center " + classActive },
-                file.path,
+                file.name,
                 React.createElement("button", {onClick:this.onDelete, "className":"btn btn-sm btn-danger", "type":"button"}, "Delete")
             ));
     }

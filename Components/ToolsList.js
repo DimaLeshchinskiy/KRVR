@@ -20,6 +20,10 @@ class ToolsList extends React.Component{
     this.onZoomClick = this.onZoomClick.bind(this);
     this.onScaleClick = this.onScaleClick.bind(this);
     this.onGridClick = this.onGridClick.bind(this);
+
+    this.onRotate3DClick = this.onRotate3DClick.bind(this);
+    this.onScale3DClick = this.onScale3DClick.bind(this);
+    this.onMove3DClick = this.onMove3DClick.bind(this);
   }
 
   toogle(){
@@ -59,9 +63,9 @@ class ToolsList extends React.Component{
               { "className": "toolsSection" },
               React.createElement("div", null,
               React.createElement(Tool, {src: "../assets/img/grid.svg", click: this.onGridClick}),
-              React.createElement(Tool, {src: "../assets/img/zoom.svg", click: this.onZoomClick}),
-              React.createElement(Tool, {src: "../assets/img/scale.svg", click: this.onScaleClick}),
-              React.createElement(Tool, {src: "../assets/img/rotate.svg", click: this.onRotateClick})
+              React.createElement(Tool, {src: "../assets/img/move.svg", click: this.onMove3DClick}),
+              React.createElement(Tool, {src: "../assets/img/scale.svg", click: this.onScale3DClick}),
+              React.createElement(Tool, {src: "../assets/img/rotate.svg", click: this.onRotate3DClick})
               ),
               React.createElement("div", { "className": "toolsSectionToogle", onClick:this.toogle},
                 React.createElement("img", {src: "../assets/img/arr-left.png"})
@@ -93,6 +97,18 @@ class ToolsList extends React.Component{
 
   onGridClick(){
     toolManager.select("grid");
+  }
+
+  onScale3DClick(){
+    toolManager.select("scale3D");
+  }
+
+  onRotate3DClick(){
+    toolManager.select("rotate3D");
+  }
+
+  onMove3DClick(){
+    toolManager.select("move3D");
   }
 }
 

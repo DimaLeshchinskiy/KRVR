@@ -12,8 +12,11 @@ class ThreeDimensions extends React.Component{
     super(props);
     this.spaceRef = React.createRef();
 
+    this.meshes = [];
+
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
+    this.onMousePick = this.onMousePick.bind(this);
     this.update = this.update.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.renderFiles = this.renderFiles.bind(this);
@@ -24,6 +27,8 @@ class ThreeDimensions extends React.Component{
     this.controls = null;
     this.scene = null;
     this.renderer = null;
+    this.raycaster = null;
+    this.mouse = null;
 
     this.meshWorkspace = null; //workspace mesh
     this.meshLaser = null; //laser mesh
@@ -37,6 +42,9 @@ class ThreeDimensions extends React.Component{
 
   componentDidMount() {
     this._isMounted = true;
+
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
 
     console.log("mount");
     let root = this.spaceRef.current;
@@ -92,6 +100,7 @@ class ThreeDimensions extends React.Component{
 		this.scene.add(light);
 
 		window.addEventListener('resize', this.onWindowResize, false);
+    root.addEventListener( 'mouseup', this.onMousePick, false );
 
     this.animate();
 
@@ -101,8 +110,6 @@ class ThreeDimensions extends React.Component{
   }
 
   componentDidUpdate() {
-
-    console.log(this.scene.children);
     //files
     this.renderFiles();
 
@@ -123,16 +130,19 @@ class ThreeDimensions extends React.Component{
   }
 
   generateWorkspace(){
-    let x = config.getDevX() * config.getByKey("ScreenS");
-    let y = config.getDevY() * config.getByKey("ScreenS");
+    let width = config.getDevX() * config.getByKey("ScreenS");
+    let height = config.getDevY() * config.getByKey("ScreenS");
 
-    var geometryWorkspace = new THREE.BoxGeometry(x, 10, y);
+    let x = config.getDevX() / 2 * config.getByKey("ScreenS");
+    let y = -config.getDevY() / 2 * config.getByKey("ScreenS");
+
+    var geometryWorkspace = new THREE.BoxGeometry(width, 10, height);
 		var materialWorkspace = new THREE.MeshLambertMaterial({
 			map: this.textureWorkspace
 		});
 		var meshWorkspace = new THREE.Mesh(geometryWorkspace, materialWorkspace);
 
-		meshWorkspace.position.set(0, 0, 0);
+		meshWorkspace.position.set(x, 0, y);
 		meshWorkspace.updateMatrix();
 		meshWorkspace.matrixAutoUpdate = false;
 
@@ -142,8 +152,8 @@ class ThreeDimensions extends React.Component{
   generateLaser(){
     let toolHeight = 100;
 
-    let x = (_state.getX() - config.getDevX() / 2) * config.getByKey("ScreenS");
-    let y = (-_state.getY() + config.getDevY() / 2) * config.getByKey("ScreenS");
+    let x = _state.getX() * config.getByKey("ScreenS");
+    let y = -_state.getY() * config.getByKey("ScreenS");
     let z = _state.getZ() * config.getByKey("ScreenS")  + toolHeight / 2;
 
     var geometryLaser = new THREE.BoxGeometry(20, toolHeight, 20);
@@ -159,12 +169,28 @@ class ThreeDimensions extends React.Component{
     this.meshLaser = meshLaser;
   }
 
-	onWindowResize() {
+  onWindowResize() {
     let root = this.spaceRef.current;
 
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
+	}
+
+  onMousePick(event) {
+    if(event.button != 2) return;
+
+    this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	  this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    this.raycaster.setFromCamera( this.mouse, this.camera );
+
+  	let intersect = this.raycaster.intersectObjects( this.meshes )[0];
+
+    if(intersect){
+      let id = intersect.object.userData.id;
+      let file = fileManager.getById(id);
+      fileManager.select(file);
+    }
 	}
 
 	animate() {
@@ -185,6 +211,8 @@ class ThreeDimensions extends React.Component{
   }
 
   renderFiles(){
+    this.meshes = [];
+
     //file render
     let files = fileManager.getAll();
     for (let i = 0; i < files.length; i++) {
@@ -195,10 +223,25 @@ class ThreeDimensions extends React.Component{
         mesh = file.data;
       else continue;
 
-      console.log(mesh);
+      this.meshes.push(mesh);
+
+      let toRad = Math.PI / 180;
+
+      let scale = parseFloat(file.scale);
+      let angleX = parseInt(file.angleX3D) * toRad;
+      let angleY = parseInt(file.angleY3D) * toRad;
+      let angleZ = parseInt(file.angleZ3D) * toRad;
+      let x3D = -parseInt(file.X3D) * config.getByKey("ScreenS");
+      let y3D = parseInt(file.Y3D) * config.getByKey("ScreenS");
+      let z3D = -parseInt(file.Z3D) * config.getByKey("ScreenS");
+      mesh.scale.set(scale, scale, scale);
+      mesh.rotation.set(angleX, angleZ, angleY);
+      mesh.position.set(x3D, z3D, y3D);
+      mesh.updateMatrix();
 
       this.scene.add(mesh);
     }
+
   }
 }
 

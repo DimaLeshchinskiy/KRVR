@@ -119,7 +119,7 @@ class Modal extends React.Component{
                       ),
                       React.createElement(
                         "select",
-                        { "className": "form-control", id: "exampleFormControlSelect1", value:this.state.id , onChange: this.onChange },
+                        { "className": "form-control", value:this.state.id , onChange: this.onChange },
                         devices
                       )
                     ),
@@ -156,7 +156,7 @@ class Modal extends React.Component{
                     ),
                     React.createElement(
                       "button",
-                      { type: "button", "className": "btn btn-primary", onClick: this.save },
+                      { type: "button", "className": "btn btn-primary", "data-dismiss": "modal", onClick: this.save },
                       "Save changes"
                     )
                   )
