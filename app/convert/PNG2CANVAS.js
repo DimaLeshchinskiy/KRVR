@@ -1,5 +1,5 @@
-const util = require("../app/util");
-const config = require("../app/config");
+const util = require("../util");
+const config = require("../singleton/config");
 
 function getImage(fileData){
   let width = fileData.width;

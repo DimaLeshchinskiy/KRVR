@@ -1,6 +1,7 @@
 const pars = require("dxf-parser");
-const config = require("../app/config");
-const util = require("../app/util");
+const util = require("../util");
+const config = require("../singleton/config");
+const FileModel = require("../model/fileModel");
 
 const parser = new pars();
 
@@ -68,7 +69,9 @@ function roundNumber(num) {
 }
 
 
-exports.getDxf = async function(file){
+exports.getDxf = async function(params){
+
+  let file = new FileModel(params);
 
   maxX = 0;
   maxY = 0;

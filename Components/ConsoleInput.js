@@ -1,6 +1,6 @@
 var React = require("react");
 
-const serial = require('../app/serial');
+const serial = require('../app/singleton/serial');
 
 class ConsoleInput extends React.Component{
   constructor(props){

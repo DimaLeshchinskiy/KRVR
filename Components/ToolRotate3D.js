@@ -1,7 +1,7 @@
 var React = require("react");
 var SliderFile = require("../Components/SliderFile.js");
 
-var fileManager = require("../app/fileManager");
+var fileManager = require("../app/singleton/fileManager");
 
 class ToolRotate3D extends React.Component{
   constructor(props){

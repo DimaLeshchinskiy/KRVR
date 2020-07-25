@@ -1,7 +1,7 @@
 var React = require("react");
 var Switch = require("../Components/Switch.js");
 
-var config = require("../app/config");
+const config = require('../app/singleton/config');
 
 class ToolGrid extends React.Component{
   constructor(props){
@@ -12,7 +12,7 @@ class ToolGrid extends React.Component{
 
   setGrid(isEnable){
     config.set("stickyRuler", isEnable);
-    this.forceUpdate(); 
+    this.forceUpdate();
   }
 
   change(event){

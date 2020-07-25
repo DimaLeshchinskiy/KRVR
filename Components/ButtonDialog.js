@@ -2,7 +2,7 @@ var React = require("react");
 
 var ButtonLG = require("../Components/ButtonLG.js");
 var Modal = require("../Components/Modal.js");
-const serial = require('../app/serial');
+const serial = require('../app/singleton/serial');
 
 class ButtonDialog extends React.Component{
 

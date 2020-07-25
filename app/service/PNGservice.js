@@ -1,4 +1,6 @@
 const PNGJS = require("pngjs").PNG;
+const FileModel = require("../model/fileModel");
+
 
 function grayscale(png){
   let data = png.data;
@@ -20,7 +22,9 @@ function grayscale(png){
   return png;
 }
 
-exports.getPng = async function (file){
+exports.getPng = async function (params){
+  let file = new FileModel(params);
+
   let png = PNGJS.sync.read(file.data);
   file.data = grayscale(png);
 

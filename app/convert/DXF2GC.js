@@ -1,5 +1,5 @@
-const config = require("../app/config");
-const util = require("../app/util");
+const util = require("../util");
+const config = require("../singleton/config");
 
 var scale = 1;
 

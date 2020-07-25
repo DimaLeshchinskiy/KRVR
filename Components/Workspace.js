@@ -1,9 +1,8 @@
 const React = require("react");
 
-var fileManager = require("../app/fileManager");
-var flm = require("../app/fileLoadModule");
-var d2c = require("../app/DXF2CANVAS");
-var config = require("../app/config");
+var fileManager = require("../app/singleton/fileManager");
+var flm = require("../app/service/fileService");
+const config = require('../app/singleton/config');
 
 var TwoDimensions = require("../Components/TwoDimensions.js");
 var ThreeDimensions = require("../Components/ThreeDimensions.js");
@@ -117,8 +116,8 @@ class Workspace extends React.Component{
 
       let filesDropped = e.dataTransfer.files;
       for (let i = 0; i < filesDropped.length; i++) {
-        if (flm.setPath(filesDropped[i].path)) {
-          promises.push(flm.getFile());
+        if (flm.checkPath(filesDropped[i].path)) {
+          promises.push(flm.getFile(filesDropped[i].path));
         }
       }
 

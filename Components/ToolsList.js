@@ -2,7 +2,7 @@ var React = require("react");
 
 var Tool = require("../Components/Tool.js");
 
-var toolManager = require("../app/toolManager");
+var toolManager = require("../app/singleton/toolManager");
 
 class ToolsList extends React.Component{
   constructor(props){

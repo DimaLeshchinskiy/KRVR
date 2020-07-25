@@ -1,6 +1,6 @@
 var React = require("react");
 
-const serial = require('../app/serial');
+const serial = require('../app/singleton/serial');
 
 var Filter = require("../Components/Filter.js");
 var ConsoleOutput = require("../Components/ConsoleOutput.js");

@@ -4,7 +4,7 @@ var SelectPort = require("../Components/SelectPort.js");
 var Switch = require("../Components/Switch.js");
 var ButtonDialog = require("../Components/ButtonDialog.js");
 
-const config = require('../app/config');
+const config = require('../app/singleton/config');
 
 class Settings extends React.Component{
   constructor(props){

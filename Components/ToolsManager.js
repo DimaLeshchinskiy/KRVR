@@ -1,6 +1,6 @@
 var React = require("react");
 
-var toolManager = require("../app/toolManager");
+var toolManager = require("../app/singleton/toolManager");
 
 var ToolGrid = require("../Components/ToolGrid.js");
 var ToolRotate = require("../Components/ToolRotate.js");

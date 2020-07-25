@@ -1,6 +1,6 @@
 var React = require("react");
 
-const config = require('../app/config');
+const config = require('../app/singleton/config');
 
 class SliderFile extends React.Component{
   constructor(props){

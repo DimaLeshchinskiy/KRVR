@@ -1,3 +1,5 @@
+const FileModel = require("../model/fileModel");
+
 async function load(path) {
 
   return await new Promise( (resolve, reject) => {
@@ -23,7 +25,9 @@ async function load(path) {
   });
 }
 
-exports.getStl = async function(file){
+exports.getStl = async function(params){
+
+  let file = new FileModel(params);
 
   let mesh = await load(file.path);
   mesh.userData.id = file.id;

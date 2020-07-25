@@ -1,8 +1,8 @@
 const React = require("react");
 
-var fileManager = require("../app/fileManager");
-var config = require("../app/config");
-var _state = require("../app/state");
+var fileManager = require("../app/singleton/fileManager");
+const config = require('../app/singleton/config');
+var _state = require("../app/singleton/state");
 
 var Grid = require("../Components/Grid.js");
 

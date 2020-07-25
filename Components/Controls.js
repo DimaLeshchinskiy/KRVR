@@ -1,7 +1,7 @@
 var React = require("react");
 
-const config = require('../app/config');
-const serial = require('../app/serial');
+const config = require('../app/singleton/config');
+const serial = require('../app/singleton/serial');
 
 var Slider = require("../Components/Slider.js");
 var ButtonLG = require("../Components/ButtonLG.js");

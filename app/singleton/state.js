@@ -1,4 +1,4 @@
-var serial = require("../app/serial");
+var serial = require("../singleton/serial");
 const events = require('events');
 const listener = new events.EventEmitter();
 

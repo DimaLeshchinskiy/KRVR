@@ -1,6 +1,6 @@
 var React = require("react");
 
-var config = require("../app/config");
+const config = require('../app/singleton/config');
 
 class Grid extends React.Component{
 

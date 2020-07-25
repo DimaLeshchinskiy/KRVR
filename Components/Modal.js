@@ -1,7 +1,7 @@
 var React = require("react");
 
-const deviceService = require('../app/deviceService');
-const config = require('../app/config');
+const deviceService = require('../app/service/deviceService');
+const config = require('../app/singleton/config');
 
 class Modal extends React.Component{
 

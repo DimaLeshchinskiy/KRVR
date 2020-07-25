@@ -1,6 +1,6 @@
 var React = require("react");
 
-var fileManager = require("../app/fileManager");
+var fileManager = require("../app/singleton/fileManager");
 
 class FileManager extends React.Component{
   constructor(props){

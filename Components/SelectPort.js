@@ -1,7 +1,7 @@
 var React = require("react");
 
 var ButtonLG = require("../Components/ButtonLG.js");
-const serial = require('../app/serial');
+const serial = require('../app/singleton/serial');
 
 class SelectPort extends React.Component{
 

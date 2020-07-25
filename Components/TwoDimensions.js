@@ -1,10 +1,9 @@
 const React = require("react");
 
-var fileManager = require("../app/fileManager");
-var dxf2c = require("../app/DXF2CANVAS");
-var png2c = require("../app/PNG2CANVAS");
-var config = require("../app/config");
-var _state = require("../app/state");
+var fileManager = require("../app/singleton/fileManager");
+var flm = require("../app/service/fileService");
+const config = require('../app/singleton/config');
+var _state = require("../app/singleton/state");
 
 var Grid = require("../Components/Grid.js");
 
@@ -65,13 +64,9 @@ class TwoDimensions extends React.Component{
     for (let i = 0; i < files.length; i++) {
       let file = files[i];
 
-      let cnv = {};
-      if(file.extension == "dxf")
-        cnv = dxf2c.getCanvas(file);
-      else if(file.extension == "png")
-        cnv = png2c.getCanvas(file);
-      else
-        continue;
+      let cnv = flm.getCanvas(file);
+
+      if(!cnv) continue;
 
       cnv.draggable = true;
       cnv.style.transform = `rotate(${file.angle}deg)`;

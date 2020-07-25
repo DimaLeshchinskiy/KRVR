@@ -29,10 +29,10 @@
   var $ = require('jquery');
   var jQuery = $;
 
-  const config = require('../app/config');
+  const config = require('../app/singleton/config');
   config.load();
 
-  const deviceService = require('../app/deviceService');
+  const deviceService = require('../app/service/deviceService');
   deviceService.load();
 
   const React = require('react');

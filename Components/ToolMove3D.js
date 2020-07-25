@@ -1,8 +1,8 @@
 var React = require("react");
 var SliderFile = require("../Components/SliderFile.js");
 
-var fileManager = require("../app/fileManager");
-var config = require("../app/config");
+var fileManager = require("../app/singleton/fileManager");
+const config = require('../app/singleton/config');
 
 class ToolMove3D extends React.Component{
   constructor(props){
