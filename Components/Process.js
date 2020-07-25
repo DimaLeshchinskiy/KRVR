@@ -3,6 +3,7 @@ var React = require("react");
 var ButtonLG = require("../Components/ButtonLG.js");
 
 var fileManager = require("../app/singleton/fileManager");
+var flm = require("../app/service/fileService");
 const serial = require('../app/singleton/serial');
 
 class Process extends React.Component{
