@@ -11,6 +11,9 @@ class FileModel{
       this.data = fsModule.readFileSync(this.path, params.encoding); //at first here were data from file, after service put here parsed data
     this.id = Date.now(); //id == time of upload in miliseconds
 
+    //used for png
+    this.threshold = 100;
+
     //used for dxf
     this.minX = 0;
     this.minY = 0;

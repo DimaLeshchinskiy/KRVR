@@ -2,11 +2,14 @@ var React = require("react");
 
 var fileManager = require("../app/singleton/fileManager");
 
+var FileProperty = require("../Components/FileProperty.js");
+
 class FileManager extends React.Component{
   constructor(props){
     super(props);
 
     this.onDelete = this.onDelete.bind(this);
+    this.getPropertyWindow = this.getPropertyWindow.bind(this);
     this.onFileSelect = this.onFileSelect.bind(this);
     this.onSelect = this.onSelect.bind(this); // on FileManager Selecet event
     this.getItems = this.getItems.bind(this);
@@ -16,6 +19,10 @@ class FileManager extends React.Component{
 
   onSelect(){
     this.forceUpdate();
+  }
+
+  getPropertyWindow(file){
+    return React.createElement(FileProperty, {file: file, key:file.id + "_property"});
   }
 
   getItems() {
@@ -33,6 +40,9 @@ class FileManager extends React.Component{
                 file.name,
                 React.createElement("button", {onClick:this.onDelete, "className":"btn btn-sm btn-danger", "type":"button"}, "Delete")
             ));
+      if(classActive && file.extension == "png") //this is faster check
+        list.push(this.getPropertyWindow(file));
+
     }
 
     if(list.length == 0){

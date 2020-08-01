@@ -1,7 +1,8 @@
 const util = require("../util");
 const config = require("../singleton/config");
 
-function getImage(fileData){
+function getImage(file){
+  let fileData = file.data;
   let width = fileData.width;
   let height = fileData.height;
 
@@ -14,9 +15,11 @@ function getImage(fileData){
   var imgData = ctx.createImageData(width, height);
 
   for (i = 0; i < fileData.data.length; i += 4) {
-    imgData.data[i+0] = fileData.data[i+0];
-    imgData.data[i+1] = fileData.data[i+1];
-    imgData.data[i+2] = fileData.data[i+2];
+    let avg = fileData.data[i+0] > file.threshold? 255:0;
+
+    imgData.data[i+0] = avg;
+    imgData.data[i+1] = avg;
+    imgData.data[i+2] = avg;
     imgData.data[i+3] = fileData.data[i+3];
   }
   ctx.putImageData(imgData, 0, 0);
@@ -39,7 +42,7 @@ exports.getCanvas = function(file){
   canvas.width = width;
   canvas.height = height;
 
-  var newCanvas = getImage(file.data);
+  var newCanvas = getImage(file);
   ctx.scale(scale, scale);
   ctx.drawImage(newCanvas, 0, 0);
   //end of resize
