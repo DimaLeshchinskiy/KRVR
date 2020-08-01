@@ -40,8 +40,9 @@ serial.listener.on("position", (str)=>{
 
   this.setPosition(pos3D);
 });
-
+/*
 setInterval(
   function(){
     serial.sendAsync("?");
-  }, 100);
+  }, 300);
+  */

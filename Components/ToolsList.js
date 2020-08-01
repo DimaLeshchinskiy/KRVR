@@ -24,6 +24,7 @@ class ToolsList extends React.Component{
     this.onRotate3DClick = this.onRotate3DClick.bind(this);
     this.onScale3DClick = this.onScale3DClick.bind(this);
     this.onMove3DClick = this.onMove3DClick.bind(this);
+    this.onMaterialClick = this.onMaterialClick.bind(this);
   }
 
   toogle(){
@@ -62,7 +63,7 @@ class ToolsList extends React.Component{
               "div",
               { "className": "toolsSection" },
               React.createElement("div", null,
-              React.createElement(Tool, {src: "../assets/img/grid.svg", click: this.onGridClick}),
+              React.createElement(Tool, {src: "../assets/img/material.svg", click: this.onMaterialClick}),
               React.createElement(Tool, {src: "../assets/img/move.svg", click: this.onMove3DClick}),
               React.createElement(Tool, {src: "../assets/img/scale.svg", click: this.onScale3DClick}),
               React.createElement(Tool, {src: "../assets/img/rotate.svg", click: this.onRotate3DClick})
@@ -109,6 +110,9 @@ class ToolsList extends React.Component{
 
   onMove3DClick(){
     toolManager.select("move3D");
+  }
+  onMaterialClick(){
+    toolManager.select("material3D");
   }
 }
 

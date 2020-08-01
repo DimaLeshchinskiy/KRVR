@@ -24,6 +24,7 @@ class FileModel{
     this.X3D = 0;
     this.Y3D = 0;
     this.Z3D = 0;
+    this.material = null;
 
     //for all
     this.height = 0;

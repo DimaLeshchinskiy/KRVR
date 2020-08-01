@@ -1,5 +1,7 @@
 const FileModel = require("../model/fileModel");
 
+const materialService = require("../service/materialService");
+
 async function load(path) {
 
   return await new Promise( (resolve, reject) => {
@@ -32,6 +34,8 @@ exports.getStl = async function(params){
   let mesh = await load(file.path);
   mesh.userData.id = file.id;
   file.data = mesh;
+
+  file.material = materialService.getCustom();
 
   return file;
 }

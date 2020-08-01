@@ -10,7 +10,7 @@ function grayscale(png){
     green = data[i + 1];
     blue = data[i + 2];
 
-    avg = 0.21 * red + 0.71 * green + 0.07 * blue;
+    let avg = 0.21 * red + 0.71 * green + 0.07 * blue;
 
     data[i+0] = avg;
     data[i+1] = avg;
@@ -30,8 +30,6 @@ exports.getPng = async function (params){
 
   file.width = png.width;
   file.height = png.height;
-
-  //file.scale = 1/4.5;
 
   file.centerX = file.width / 2;
   file.centerY = file.height / 2;

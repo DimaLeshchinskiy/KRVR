@@ -95,12 +95,18 @@ function getImage(fileData){
 
   var imgData = ctx.createImageData(width, height);
 
+  let count = 0;
+
   for (i = 0; i < fileData.data.length; i += 4) {
     imgData.data[i+0] = fileData.data[i+0];
     imgData.data[i+1] = fileData.data[i+1];
     imgData.data[i+2] = fileData.data[i+2];
     imgData.data[i+3] = fileData.data[i+3];
+
+    if(fileData.data[i+0]) count++;
   }
+
+  console.log(i + " " + count);
   ctx.putImageData(imgData, 0, 0);
 
   return canvas;
@@ -142,9 +148,9 @@ exports.getGcode = function(file){
   let finishX = 0;
   let finishY = 0;
 
-  GONN = "M3 S" + avg;
+  GONN = "M3 S255";
   let gcode = ["$X", "G21", GOFF];
-
+/*
   for(let i = 4; i < imageData.data.length; i+=4){
 
     if((i / 4) % width == 0){
@@ -179,7 +185,41 @@ exports.getGcode = function(file){
     }
 
   }
+  */
+  for(let i = 4; i < imageData.data.length; i+=4){
 
+    if((i / 4) % width == 0){
+      finishX = width - 1;
+      finishY = (i / 4) / finishX;
+
+      if(avg > 60){
+        GONN = "M3 S255";
+        cmd = LineGcode(startX, height - startY, finishX, height - finishY);
+        gcode = gcode.concat(cmd)
+      }
+
+      startX = 0;
+      startY = finishY + 1;
+      avg = imageData.data[i + 4];
+      i+=4;
+
+    }else if(avg != imageData.data[i]){
+      prev = i / 4 - 1;
+      finishX = prev - parseInt(prev / width, 10) * width - 1;
+      finishY = parseInt(prev / width, 10);
+
+      if(avg > 60){
+        GONN = "M3 S255";
+        cmd = LineGcode(startX, height - startY, finishX, height - finishY);
+        gcode = gcode.concat(cmd)
+      }
+
+      startX = finishX;
+      startY = finishY;
+      avg = imageData.data[i];
+    }
+
+  }
   gcode.push("$X");
   return gcode;
 }

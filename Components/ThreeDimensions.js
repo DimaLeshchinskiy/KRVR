@@ -130,19 +130,21 @@ class ThreeDimensions extends React.Component{
   }
 
   generateWorkspace(){
+    let workspaceDepth = 10;
+
     let width = config.getDevX() * config.getByKey("ScreenS");
     let height = config.getDevY() * config.getByKey("ScreenS");
 
     let x = config.getDevX() / 2 * config.getByKey("ScreenS");
     let y = -config.getDevY() / 2 * config.getByKey("ScreenS");
 
-    var geometryWorkspace = new THREE.BoxGeometry(width, 10, height);
+    var geometryWorkspace = new THREE.BoxGeometry(width, workspaceDepth, height);
 		var materialWorkspace = new THREE.MeshLambertMaterial({
 			map: this.textureWorkspace
 		});
 		var meshWorkspace = new THREE.Mesh(geometryWorkspace, materialWorkspace);
 
-		meshWorkspace.position.set(x, 0, y);
+		meshWorkspace.position.set(x, -workspaceDepth / 2, y);
 		meshWorkspace.updateMatrix();
 		meshWorkspace.matrixAutoUpdate = false;
 
@@ -223,8 +225,6 @@ class ThreeDimensions extends React.Component{
         mesh = file.data;
       else continue;
 
-      this.meshes.push(mesh);
-
       let toRad = Math.PI / 180;
 
       let scale = parseFloat(file.scale);
@@ -238,8 +238,10 @@ class ThreeDimensions extends React.Component{
       mesh.rotation.set(angleX, angleZ, angleY);
       mesh.position.set(x3D, z3D, y3D);
       mesh.updateMatrix();
-
+      
+      this.meshes.push(mesh);
       this.scene.add(mesh);
+
     }
 
   }

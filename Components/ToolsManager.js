@@ -10,6 +10,7 @@ var ToolZoom = require("../Components/ToolZoom.js");
 var ToolRotate3D = require("../Components/ToolRotate3D.js");
 var ToolScale3D = require("../Components/ToolScale3D.js");
 var ToolMove3D = require("../Components/ToolMove3D.js");
+var ToolMaterial = require("../Components/ToolMaterial.js");
 
 const toolIds = [
                   {toolId:"grid", component: ToolGrid},
@@ -18,7 +19,9 @@ const toolIds = [
                   {toolId:"zoom", component: ToolZoom},
                   {toolId:"scale3D", component: ToolScale3D},
                   {toolId:"rotate3D", component: ToolRotate3D},
-                  {toolId:"move3D", component: ToolMove3D}
+                  {toolId:"move3D", component: ToolMove3D},
+                  {toolId:"material3D", component: ToolMaterial}
+
                 ];
 
 class ToolsManager extends React.Component{

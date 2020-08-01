@@ -65,6 +65,8 @@ function writeToArduino(){
 
   let data = buffer.shift();
 
+  console.log(data);
+
   if(data){
     listener.emit("log", data, "input");
 
@@ -115,6 +117,7 @@ parser.on('data', function(data) {
     writeToArduino();
   }
   else if(data.includes("ok")){
+    console.log(asyncReqCount);
     if(asyncReqCount){
       asyncReqCount--;
     }else{
