@@ -145,7 +145,7 @@ exports.getGcode = function(file){
   canvas.width = width;
   canvas.height = height;
 
-  var newCanvas = getImage(file.data);
+  var newCanvas = getImage(file);
   ctx.scale(scale, scale);
   ctx.drawImage(newCanvas, 0, 0);
   //end of resize
