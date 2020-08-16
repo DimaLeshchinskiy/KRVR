@@ -70,7 +70,7 @@ function Line(x0, y0, x1, y1){
   let gcode = [];
 
   for(let i = 0; i < linesPerMM; i++){
-    let y = y0 + i / linesPerMM;
+    let y = y0 - i / linesPerMM;
     let cmd = [];
 
     if(i % 2 == 0)//from left to right
@@ -105,7 +105,7 @@ function getImage(file){
 
   let count = 0;
 
-  for (i = 0; i < fileData.data.length; i += 4) {
+  for (let i = 0; i < fileData.data.length; i += 4) {
     let avg = fileData.data[i+0] > file.threshold? 255:0;
 
     imgData.data[i+0] = avg;
@@ -153,22 +153,38 @@ exports.getGcode = function(file){
   let imageData = ctx.getImageData(0, 0, width, height);
 
   let avg = imageData.data[0];
-  let startX = 0;
-  let startY = 0;
-  let finishX = 0;
-  let finishY = 0;
 
   GONN = "M3 S255";
   let gcode = ["$X", "G21", GOFF];
   let cmd = null;
 
-  for(let i = 4; i < imageData.data.length; i+=4){
+  for(let i = 0; i < imageData.data.length; i+=4){
 
+    if(imageData.data[i] != 0) //skip first white pixels
+      continue;
+
+    //its black now
+    let startX =  (i / 4) % width;
+    let startY = ((i / 4) - startX) / width;
+
+    //i+=4; //next pixel
+    while(imageData.data[i] == 0 && ((i / 4) + 1) % width != 0){ //go to last black pixel or end of line
+      i+=4;
+    }
+
+    //end of black line
+    let finishX = (i / 4) % width + 1;
+    let finishY = ((i / 4) - finishX) / width;
+
+    let cmd = Line(startX, height - startY, finishX, height - finishY);
+    gcode = gcode.concat(cmd)
+/*
     if((i / 4) % width == 0){
       finishX = width - 1;
       finishY = (i / 4) / finishX;
 
       if(avg == 0){ // if line was black
+        console.log("EndLine");
         cmd = Line(startX, height - startY, finishX, height - finishY);
         gcode = gcode.concat(cmd)
       }
@@ -192,6 +208,7 @@ exports.getGcode = function(file){
       startY = finishY;
       avg = imageData.data[i];
     }
+  */
 
   }
   gcode.push("$X");

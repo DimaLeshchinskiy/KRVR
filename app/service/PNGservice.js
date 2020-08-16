@@ -9,12 +9,19 @@ function grayscale(png){
     red = data[i + 0];
     green = data[i + 1];
     blue = data[i + 2];
+    alpha = data[i + 3];
 
     let avg = 0.21 * red + 0.71 * green + 0.07 * blue;
+
+    if(alpha == 0)
+      avg = 255;
 
     data[i+0] = avg;
     data[i+1] = avg;
     data[i+2] = avg;
+
+    data[i+3] = 255;
+
   }
 
   png.data = data;

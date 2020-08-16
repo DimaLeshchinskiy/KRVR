@@ -21,6 +21,7 @@ function getImage(file){
     imgData.data[i+1] = avg;
     imgData.data[i+2] = avg;
     imgData.data[i+3] = fileData.data[i+3];
+    //console.log(fileData.data[i+3]);
   }
   ctx.putImageData(imgData, 0, 0);
 
