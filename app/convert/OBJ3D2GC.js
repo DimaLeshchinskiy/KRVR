@@ -1,63 +1,134 @@
 const config = require("../singleton/config");
 
-function getDepthMap(file){
-  let root = document.createElement("div");
+function getMeshGeometry(file){
+  let geometry = file.data.geometry.clone();
+  geometry.center();
 
-  let width = config.getDevX() * config.getByKey("ScreenS");
-  let height = config.getDevY() * config.getByKey("ScreenS");
-  let deviceZ = config.getDevZ() * config.getByKey("ScreenS");
-
-  //scene
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xFF0000);
-
-  renderer = new THREE.WebGLRenderer({
-    logarithmicDepthBuffer: true
-  });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(width, height);
-  root.appendChild(renderer.domElement);
-
-  //mesh
-  let geometry = file.data.geometry;
-	geometry.center();
-
-	let material = new THREE.MeshDepthMaterial();
-	let mesh = new THREE.Mesh(geometry, material);
   let toRad = Math.PI / 180;
 
   let scale = parseFloat(file.scale);
   let angleX = parseInt(file.angleX3D) * toRad;
   let angleY = parseInt(file.angleY3D) * toRad;
   let angleZ = parseInt(file.angleZ3D) * toRad;
-  let x3D = -parseInt(file.X3D) * config.getByKey("ScreenS");
-  let y3D = parseInt(file.Y3D) * config.getByKey("ScreenS");
-  let z3D = -parseInt(file.Z3D) * config.getByKey("ScreenS");
-  mesh.scale.set(scale, scale, scale);
-  mesh.rotation.set(angleX, angleZ, angleY);
-  mesh.position.set(x3D, z3D, y3D);
-  mesh.updateMatrix();
-  scene.add(mesh);
+
+  geometry.rotateX(angleX);
+  geometry.rotateY(angleZ);
+  geometry.rotateZ(angleY);
+
+  geometry.scale(scale, scale, scale);
+
+  return geometry;
+}
+
+function getSizeOfGeometry(geometry){
+
+  geometry.computeBoundingBox();
+
+  let box = geometry.boundingBox;
+  console.log(box.min, box.max);
+
+  return box;
+}
+
+async function getLayers(param){
+  //box bounder
+  let box = param.sizeOfMesh;
+
+  //sizes count
+  let deviceZ = config.getDevZ();
+  let width = Math.abs(box.min.x) * 2;
+  let height = Math.abs(box.min.z) * 2;
+  let depth = Math.abs(box.min.y) * 2;
 
   //camera
   camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 0, deviceZ);
-  camera.position.set(width / 2, deviceZ + 1, height / -2);
-  camera.lookAt(width / 2, 0,  height / -2);
+  camera.position.set(0, deviceZ, 0);
+  camera.lookAt(0, 0, 0);
 
-  //render
-  let img = new Image();
-  renderer.render(scene, camera);
-  img.src = renderer.domElement.toDataURL();
+  //renderer
+  let renderer = param.renderer;
+  renderer.setSize(width, height);
 
-  return img;
+  let images = [];
+  let step = 0.1;
+
+  for(let i = depth; i >= 0; i -= step)
+  {
+    //scene
+    let scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xFF0000);
+
+    //mesh
+    let planeGeometry = new THREE.BoxGeometry(width, step, height);
+    planeGeometry.center();
+    planeGeometry.translate(0, i, 0);
+    planeGeometry.translate(0, -depth / 2, 0);
+
+    let planeBSP = new ThreeBSP(planeGeometry);
+    planeBSP = planeBSP.subtract(param.geometryBSP);
+
+    let mesh = planeBSP.toMesh();
+    if(mesh.geometry.vertices.length == 0) break; //exit if result mesh is empty
+    scene.add(mesh);
+
+    //render
+    renderer.render(scene, camera);
+    let img = await loadImage(renderer.domElement.toDataURL());
+    img.width = width;
+    img.height = height;
+
+    images.push({
+      img: img,
+      imageData: getImageData(img),
+      layer: i
+    });
+  }
+
+  return images;
 }
 
+function loadImage(src){
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  })
+}
 
-exports.getGcode = function(file){
+function getImageData(img){
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
 
-  let depthMap = getDepthMap(file);
+  // Copy the image contents to the canvas
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
 
-  console.log(depthMap);
+  return ctx.getImageData(0, 0, img.width, img.height);
+}
+
+exports.getGcode = async function(file){
+
+  let geometry = getMeshGeometry(file);
+  let size = getSizeOfGeometry(geometry); // return Three.Box3
+  let renderer = new THREE.WebGLRenderer({
+    logarithmicDepthBuffer: true
+  });
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  let layers = await getLayers(
+  {
+    geometryBSP: new ThreeBSP(geometry),
+    sizeOfMesh: size,
+    renderer: renderer
+  });
+
+  console.log(layers);
+
+  for(let i = 0; i < layers.length; i++)
+    console.image(layers[i].img.src);
+
 
   return null;
 }
