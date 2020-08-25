@@ -103,8 +103,6 @@ function getImage(file){
 
   var imgData = ctx.createImageData(width, height);
 
-  let count = 0;
-
   for (let i = 0; i < fileData.data.length; i += 4) {
     let avg = fileData.data[i+0] > file.threshold? 255:0;
 
@@ -112,11 +110,8 @@ function getImage(file){
     imgData.data[i+1] = avg;
     imgData.data[i+2] = avg;
     imgData.data[i+3] = fileData.data[i+3];
-
-    if(fileData.data[i+0]) count++;
   }
 
-  console.log(i + " " + count);
   ctx.putImageData(imgData, 0, 0);
 
   return canvas;
