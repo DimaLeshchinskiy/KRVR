@@ -4,6 +4,11 @@ var fileManager = require("../app/singleton/fileManager");
 const config = require('../app/singleton/config');
 var _state = require("../app/singleton/state");
 
+//renderer setup
+let renderer = new THREE.WebGLRenderer({
+  antialias: true
+});
+
 var Grid = require("../Components/Grid.js");
 
 class ThreeDimensions extends React.Component{
@@ -26,9 +31,12 @@ class ThreeDimensions extends React.Component{
     this.camera = null;
     this.controls = null;
     this.scene = null;
-    this.renderer = null;
     this.raycaster = null;
     this.mouse = null;
+
+    //render setup
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
     this.meshWorkspace = null; //workspace mesh
     this.meshLaser = null; //laser mesh
@@ -52,19 +60,14 @@ class ThreeDimensions extends React.Component{
 		this.scene = new THREE.Scene();
 		this.scene.background = new THREE.Color(0xcccccc);
 
-		this.renderer = new THREE.WebGLRenderer({
-			antialias: true
-		});
-		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		root.appendChild(this.renderer.domElement);
+		root.appendChild(renderer.domElement);
 
 		this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200000);
 		this.camera.position.set(0, 900, 900);
 
 		// this.controls
 
-		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+		this.controls = new THREE.OrbitControls(this.camera, renderer.domElement);
 
 		this.controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
 		this.controls.dampingFactor = 0.05;
@@ -122,7 +125,6 @@ class ThreeDimensions extends React.Component{
     this.scene.remove(this.meshLaser);
     this.generateLaser();
 		this.scene.add(this.meshLaser);
-
   }
 
   render(){
@@ -176,7 +178,7 @@ class ThreeDimensions extends React.Component{
 
 		this.camera.aspect = window.innerWidth / window.innerHeight;
 		this.camera.updateProjectionMatrix();
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
   onMousePick(event) {
@@ -199,7 +201,7 @@ class ThreeDimensions extends React.Component{
     if(!this._isMounted) return;
 		requestAnimationFrame(this.animate);
 		this.controls.update();
-		this.renderer.render(this.scene, this.camera);
+		renderer.render(this.scene, this.camera);
 	}
 
   update(){
@@ -227,7 +229,7 @@ class ThreeDimensions extends React.Component{
 
       let toRad = Math.PI / 180;
 
-      let scale = parseFloat(file.scale);
+      let scale = parseFloat(file.scale) * config.getByKey("ScreenS");
       let angleX = parseInt(file.angleX3D) * toRad;
       let angleY = parseInt(file.angleY3D) * toRad;
       let angleZ = parseInt(file.angleZ3D) * toRad;
@@ -238,7 +240,7 @@ class ThreeDimensions extends React.Component{
       mesh.rotation.set(angleX, angleZ, angleY);
       mesh.position.set(x3D, z3D, y3D);
       mesh.updateMatrix();
-      
+
       this.meshes.push(mesh);
       this.scene.add(mesh);
 
