@@ -3,7 +3,7 @@ const DrillModel = require("../model/drillModel");
 var originalSizes = [
   {size: 10, radius: 0.25},
   {size: 10, radius: 0.35},
-  {size: 10, radius: 0.55},
+  {size: 10, radius: 0.45},
   {size: 10, radius: 0.55},
   {size: 10, radius: 0.65},
   {size: 10, radius: 0.75},

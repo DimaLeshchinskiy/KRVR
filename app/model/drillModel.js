@@ -1,9 +1,13 @@
+const utill = require("../utill");
+
 class DrillModel{
   constructor(radius, size, set) {
     this.size = size;
     this.radius = radius;
 
     this.isInSet = set;
+
+    this.id = utill.generateUUID();
   }
 
   inSet(parametr = true){
