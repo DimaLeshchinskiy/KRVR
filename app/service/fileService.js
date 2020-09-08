@@ -52,15 +52,15 @@ exports.getCanvas = function(file){
   return null;
 }
 
-exports.getGcode = function(file){
+exports.getGcode = async function(file){
   if(file.extension == "png")
-    return png2g.getGcode(file);
+    return await png2g.getGcode(file);
   else if(file.extension == "dxf")
-    return dxf2g.getGcode(file);
+    return await dxf2g.getGcode(file);
   else if(file.extension == "gcode")
-    return gcode2g.getGcode(file);
+    return await gcode2g.getGcode(file);
   else if (isFile3D(file))
-    return obj3D2g.getGcode(file);
+    return await obj3D2g.getGcode(file);
 
   return null;
 }

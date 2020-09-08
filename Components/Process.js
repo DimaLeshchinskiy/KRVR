@@ -22,14 +22,15 @@ class Process extends React.Component{
 
     //delete from this
     let files = fileManager.getAll();
+    let promises = [];
 
     for (var i = 0; i < files.length; i++) {
       let file = files[i];
-      let gcode = flm.getGcode(file);
-      if(!gcode) continue;
-
-      console.log(gcode);
+      promises.push(flm.getGcode(file));
     }
+
+    Promise.allSettled(promises).
+      then((results) => results.forEach((result) => console.log(result.value)));
 
     //delete to this
 
@@ -42,18 +43,21 @@ class Process extends React.Component{
       this.setState({isWorking: true});
 
       let files = fileManager.getAll();
+      let promises = [];
 
       for (var i = 0; i < files.length; i++) {
         let file = files[i];
-        let gcode = flm.getGcode(file);
-        if(!gcode) continue;
-
-        console.log(gcode);
-
-        serial.push(gcode);
+        promises.push(flm.getGcode(file));
       }
 
-      serial.write();
+      Promise.allSettled(promises).
+        then((results) => {
+          results.forEach((result) => {
+            serial.push(result.value);
+          })
+          serial.write();
+      });
+
     }else{
       serial.stop();
     }
