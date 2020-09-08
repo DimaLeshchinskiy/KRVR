@@ -1,4 +1,3 @@
-const util = require("../util");
 const config = require("../singleton/config");
 
 var scale = 1;

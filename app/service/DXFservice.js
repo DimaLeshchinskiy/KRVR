@@ -1,5 +1,4 @@
 const pars = require("dxf-parser");
-const util = require("../util");
 const config = require("../singleton/config");
 const FileModel = require("../model/fileModel");
 
