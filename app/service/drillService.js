@@ -28,7 +28,7 @@ var custom =  [];
 exports.load = function(){
 
   for(let i = 0; i < originalSizes.length; i++)
-    original.push(this.create(originalSizes[i].radius, originalSizes[i].size, originalSizes[i].inSet));
+    original.push(create(originalSizes[i].radius, originalSizes[i].size, originalSizes[i].inSet));
 }
 
 exports.getAll = function(){
@@ -96,10 +96,10 @@ exports.pushInSet = function(id){
     drill.inSet();
 }
 
-exports.addNew = function(radius, size, set = false){
-  custom.push(create(radius, size, set));
+exports.addNew = function(radius, size, set = false, color = "#000000"){
+  custom.push(create(radius, size, set, color));
 }
 
-exports.create = function(radius, size, set = false){
-  return new DrillModel(radius, size, set);
+function create(radius, size, set = false, color = "#000000"){
+  return new DrillModel(radius, size, set, color);
 }

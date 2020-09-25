@@ -1,9 +1,10 @@
 const utill = require("../utill");
 
 class DrillModel{
-  constructor(radius, size, set) {
+  constructor(radius, size, set, color) {
     this.size = size;
     this.radius = radius;
+    this.color = color;
 
     this.isInSet = set;
 
@@ -26,6 +27,9 @@ class DrillModel{
       return false;
 
     if(object.radius != this.radius)
+      return false;
+
+    if(object.color != this.color)
       return false;
 
     return true;
