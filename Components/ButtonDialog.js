@@ -1,7 +1,6 @@
 var React = require("react");
 
 var ButtonLG = require("../Components/ButtonLG.js");
-var Modal = require("../Components/Modal.js");
 const serial = require('../app/singleton/serial');
 
 class ButtonDialog extends React.Component{
@@ -14,13 +13,13 @@ class ButtonDialog extends React.Component{
   }
 
   onClick(){
-    $(".modal").modal('show');
+    $(".modal_" + this.props.selector).modal('show');
   }
 
   render(){
     return React.createElement("div", null,
               React.createElement(ButtonLG, { color: this.props.color, name: this.props.title, click: this.onClick }),
-              React.createElement(Modal, {title: this.props.title}, this.props.children)
+              React.createElement(this.props.modal, {title: this.props.title, selector: this.props.selector}, this.props.children)
           );
   }
 }

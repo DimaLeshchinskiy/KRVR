@@ -180,25 +180,6 @@ body {
   padding: 5px;
 }
 
-/*   CUSTOM SELECT   */
-/*
-select {
-  width: 100%;
-  height: 30px;
-  font-size: 15px;
-  margin-bottom: 5px;
-  background-color: var(--bgContent);
-  border: none;
-  color: var(--txt);
-  border-radius: 10px;
-  border: 1px solid var(--txt);
-}
-
-option {
-  background-color: var(--bgContent);
-  color: var(--txt);
-}
-*/
 /*  WORKSPACE  */
 canvas {
   position: absolute;
@@ -312,7 +293,7 @@ canvas.selected {
   cursor: default;
 }
 
-/* Modal */
+/* Modal Device */
 .Size {
   display: flex;
   line-height: 38px;
@@ -345,4 +326,34 @@ canvas.selected {
 
 .dimensionSelect>label {
   margin-bottom: auto !important;
+}
+
+/* Modal Drill */
+.modal_drill table {
+  width: 100%;
+}
+
+.modal_drill tr {
+  text-align: center;
+}
+
+.modal_drill td {
+  padding: 10px;
+}
+
+.modal_drill td p {
+  margin: auto;
+}
+
+.modal_drill table .form-check-inline {
+  margin-right: 0px;
+}
+
+.modal_drill tbody tr {
+  border-bottom: #c9d1d8 1px solid;
+}
+
+.modal_drill input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
 }

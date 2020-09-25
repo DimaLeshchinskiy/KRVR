@@ -3,7 +3,7 @@ var React = require("react");
 const deviceService = require('../app/service/deviceService');
 const config = require('../app/singleton/config');
 
-class Modal extends React.Component{
+class ModalDevice extends React.Component{
 
   constructor(props){
     super(props);
@@ -81,7 +81,7 @@ class Modal extends React.Component{
 
     return React.createElement(
               "div",
-              { "className": "modal fade", "data-backdrop": false, id: "exampleModalCenter", tabIndex: "-1", role: "dialog", "aria-labelledby": "exampleModalCenterTitle", "aria-hidden": "true" },
+              { "className": "modal fade modal_" + this.props.selector, "data-backdrop": false, id: "exampleModalCenter", tabIndex: "-1", role: "dialog", "aria-labelledby": "exampleModalCenterTitle", "aria-hidden": "true" },
               React.createElement(
                 "div",
                 { "className": "modal-dialog modal-dialog-centered", role: "document" },
@@ -166,4 +166,4 @@ class Modal extends React.Component{
   }
 }
 
-module.exports = Modal;
+module.exports = ModalDevice;

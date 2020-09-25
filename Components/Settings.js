@@ -3,6 +3,8 @@ var React = require("react");
 var SelectPort = require("../Components/SelectPort.js");
 var Switch = require("../Components/Switch.js");
 var ButtonDialog = require("../Components/ButtonDialog.js");
+var ModalDevice = require("../Components/ModalDevice.js");
+var ModalDrill = require("../Components/ModalDrill.js");
 
 const config = require('../app/singleton/config');
 
@@ -44,7 +46,8 @@ class Settings extends React.Component{
               ),
 
               React.createElement(SelectPort),
-              React.createElement(ButtonDialog, { color: "blue", title: "Change device model"})
+              React.createElement(ButtonDialog, { color: "blue", title: "Change device model", modal: ModalDevice, selector:"device"}),
+              React.createElement(ButtonDialog, { color: "blue", title: "Drills setup", modal: ModalDrill, selector:"drill"})
             );
   }
 }
