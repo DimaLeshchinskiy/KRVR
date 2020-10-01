@@ -96,6 +96,23 @@ exports.pushInSet = function(id){
     drill.inSet();
 }
 
+exports.remove = function(id){
+  for (let i = 0; i < original.length; i++) {
+    if(original[i].id == id){
+      original.splice(i, 1);
+      return true;
+    }
+  }
+  for (let i = 0; i < custom.length; i++) {
+    if(custom[i].id == id){
+      custom.splice(i, 1);
+      return true;
+    }
+  }
+
+  return false;
+}
+
 exports.addNew = function(radius, size, set = false, color = "#000000"){
   custom.push(create(radius, size, set, color));
 }

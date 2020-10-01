@@ -8,42 +8,38 @@ class ModalDrill extends React.Component{
   constructor(props){
     super(props);
 
-    let device = config.getByKey("device");
-
-    this.state = {
-      id: device.id,
-      maxX: device.maxX,
-      maxY: device.maxY,
-      maxZ: device.maxZ
-    };
-
-    this.input = this.input.bind(this);
+    this.add = this.add.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
     this.getDrills = this.getDrills.bind(this);
   }
 
-  input(event) {
-    if(deviceService.isOriginal(this.state.id))
-      return;
+  add(event) {
+    let inputGroup = event.target.parentElement.parentElement;
 
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
+    let radius = inputGroup.children[0].value;
+    let size = inputGroup.children[1].value;
 
-    this.setState({
-      [name]: value
-    });
+    if(size && radius)
+    {
+      drillService.addNew(radius, size);
+      this.forceUpdate();
+    }
+  }
+
+  onUpdate(){
+    this.forceUpdate();
   }
 
   getDrills(){
     let drills = drillService.getAll();
     let reactArr = [];
 
-    for (var i = 0; i < drills.length; i++) {
 
+    for (var i = 0; i < drills.length; i++) {
       reactArr.push(
         React.createElement(
           DrillLine,
-          {key: i, drillId: drills[i].id}
+          {key: drills[i].id, drillId: drills[i].id, onUpdate: this.onUpdate}
         ));
     }
 
@@ -109,23 +105,29 @@ class ModalDrill extends React.Component{
                       React.createElement("input", { type: "text", "className": "form-control", placeholder: "Length", "aria-describedby": "basic-addon2" }),
                       React.createElement(
                         "div",
-                        { "className": "input-group-append" },
+                        { "className": "input-group-append", onClick:this.add},
                         React.createElement(
                           "button",
-                          { "className": "btn btn-outline-primary", type: "button" },
+                          { "className": "btn btn-outline-primary", type: "button"},
                           "Add"
                         )
                       )
                     ),
 
                     React.createElement(
-                      "table",
-                      null,
-                      React.createElement("thead", null,
-                        React.createElement("tr", null, header)
-                      ),
-                      React.createElement("tbody", null, drills)
+                      "div",
+                      { "className": "tablewrapper"},
+                      React.createElement(
+                        "table",
+                        null,
+                        React.createElement("thead", null,
+                          React.createElement("tr", null, header)
+                        ),
+                        React.createElement("tbody", null, drills)
+                      )
                     )
+
+
 
 
 

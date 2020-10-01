@@ -8,6 +8,23 @@ class DrillLine extends React.Component{
 
     this.drill = drillService.getById(props.drillId);
     this.drillId = props.drillId;
+
+    this.state = {inSet: this.drill.isInSet};
+
+    this.remove = this.remove.bind(this);
+    this.set = this.set.bind(this);
+  }
+
+  remove(event){
+    drillService.remove(this.drillId);
+    this.props.onUpdate();
+  }
+
+  set(event){
+    let newVal = event.target.checked;
+
+    this.drill.inSet(newVal);
+    this.setState({inSet: newVal});
   }
 
   render(){
@@ -20,7 +37,12 @@ class DrillLine extends React.Component{
                 React.createElement(
                   "div",
                   { "class": "form-check form-check-inline" },
-                  React.createElement("input", { type: "checkbox", "className": "form-check-input", id: "exampleCheck1" })
+                  React.createElement("input", {
+                    type: "checkbox",
+                    "className": "form-check-input",
+                    checked: this.state.inSet,
+                    onChange: this.set
+                  })
                 )
               ),
               React.createElement(
@@ -44,7 +66,7 @@ class DrillLine extends React.Component{
               React.createElement(
                 "td",
                 null,
-                React.createElement("img", { src: "../assets/img/close.svg" })
+                React.createElement("img", { src: "../assets/img/close.svg", onClick: this.remove})
               )
             );
   }

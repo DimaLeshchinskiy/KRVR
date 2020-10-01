@@ -357,3 +357,8 @@ canvas.selected {
   width: 20px;
   height: 20px;
 }
+
+.modal_drill .tablewrapper {
+  height: 300px;
+  overflow: auto;
+}

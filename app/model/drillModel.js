@@ -2,8 +2,8 @@ const utill = require("../utill");
 
 class DrillModel{
   constructor(radius, size, set, color) {
-    this.size = size;
-    this.radius = radius;
+    this.size = parseInt(size, 10);
+    this.radius = parseInt(radius, 10);
     this.color = color;
 
     this.isInSet = set;
