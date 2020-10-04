@@ -4,6 +4,8 @@ const Readline = SerialPort.parsers.Readline;
 const parser = new Readline();
 const listener = new events.EventEmitter();
 
+const _state = require('../singleton/state');
+
 buffer = [];
 asyncReqCount = 0;
 connection = {};
@@ -30,9 +32,19 @@ function pushToBuffer(data){
 }
 
 function stop(){
-  buffer = ["M1"];
+  if(!isOpen()) return;
+  if(!connection || !connection.isOpen) return;
+
+  buffer = [];
   listener.emit("log", "Stop", "input");
   listener.emit("end");
+
+  _state.setStatus("stop");
+
+  let buf = new Buffer(1);
+  buf[0] = 0x18;
+  connection.write(buf);
+  connection.write("\n");
 }
 
 function sendToArduino(data){
@@ -55,6 +67,7 @@ function sendToArduinoAsync(cmd){
   if(!connection || !connection.isOpen) return;
 
   if(cmd){
+    stateChange(cmd);
     asyncReqCount++;
     connection.write(cmd + "\n");
   }
@@ -62,6 +75,7 @@ function sendToArduinoAsync(cmd){
 
 function writeToArduino(){
   if(!connection || !connection.isOpen) return;
+  if(_state.getStatus() != "run") return;
 
   let data = buffer.shift();
 
@@ -69,11 +83,21 @@ function writeToArduino(){
 
   if(data){
     listener.emit("log", data, "input");
-
+    stateChange(data);
     connection.write(data + "\n");
   }else{
     listener.emit("end");
   }
+}
+
+function stateChange(cmd){
+  if(cmd == "M0" || cmd == "!")
+    _state.setStatus("pause");
+  else if(cmd == "M30")
+    _state.setStatus("stop");
+  else if(cmd == "~")
+    _state.setStatus("run");
+
 }
 
 async function closeConnection(){
@@ -109,21 +133,24 @@ function getConnection(port){
 
 
 parser.on('data', function(data) {
-  if(data.includes("MPos")){
+  /*if(data.includes("MPos")){
     listener.emit("position", data);
-  }
-  else if(data.includes("Grbl")){
+  }*/
+  if(data.includes("Grbl")){
     listener.emit("log", data, "msg");
     writeToArduino();
   }
   else if(data.includes("ok")){
-    console.log(asyncReqCount);
+    /*console.log(asyncReqCount);
     if(asyncReqCount){
       asyncReqCount--;
     }else{
       listener.emit("log", data, "msg");
       writeToArduino();
-    }
+    }*/
+
+    listener.emit("log", data, "msg");
+    writeToArduino();
   }
   else if(data.includes("error")){
     listener.emit("log", data, "error");

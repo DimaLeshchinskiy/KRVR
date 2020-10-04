@@ -5,20 +5,81 @@ var ButtonLG = require("../Components/ButtonLG.js");
 var fileManager = require("../app/singleton/fileManager");
 var flm = require("../app/service/fileService");
 const serial = require('../app/singleton/serial');
+const state = require('../app/singleton/state');
 
 class Process extends React.Component{
 
   constructor(props){
     super(props);
 
-    this.click = this.click.bind(this);
+    this.getPauseContent = this.getPauseContent.bind(this);
+    this.getRunContent = this.getRunContent.bind(this);
+    this.getStopContent = this.getStopContent.bind(this);
 
-    this.state = {isWorking: false};
+    this.run = this.run.bind(this);
+    this.pause = this.pause.bind(this);
+    this.stop = this.stop.bind(this);
+    this.resume = this.resume.bind(this);
 
-    serial.listener.on("end", () => this.setState({isWorking: false}));
+    this.state = {status: state.getStatus()};
+
+    state.listener.on("changeStatus", (state) => this.setState({status: state}));
   }
 
-  click(){
+  pause(){
+    serial.sendAsync("!");
+  }
+
+  resume(){
+    serial.sendAsync("~");
+  }
+
+  run(){
+    state.setStatus("run");
+    this.generateGCODE();
+  }
+
+  stop(){
+    serial.stop();
+  }
+
+  getStopContent(){
+    return React.createElement(
+              "div",
+              { "className": "content" },
+              React.createElement(
+                ButtonLG, { color: "blue", name: "GO", click: this.run }
+              )
+            );
+  }
+
+  getPauseContent(){
+    return React.createElement(
+              "div",
+              { "className": "content" },
+              React.createElement(
+                ButtonLG, { color: "green", name: "Resume", click: this.resume }
+              ),
+              React.createElement(
+                ButtonLG, { color: "red", name: "Stop", click: this.stop }
+              )
+            );
+  }
+
+  getRunContent(){
+    return React.createElement(
+              "div",
+              { "className": "content" },
+              React.createElement(
+                ButtonLG, { color: "orange", name: "Pause", click: this.pause }
+              ),
+              React.createElement(
+                ButtonLG, { color: "red", name: "Stop", click: this.stop }
+              )
+            );
+  }
+
+  generateGCODE(){
 
     //delete from this
     let files = fileManager.getAll();
@@ -37,11 +98,7 @@ class Process extends React.Component{
     if(!serial.isOpen()){
       //showMsg("Ooops", "Port is not connected");
       return;
-    }
-
-    if(!this.state.isWorking){
-      this.setState({isWorking: true});
-
+    }else{
       let files = fileManager.getAll();
       let promises = [];
 
@@ -57,30 +114,19 @@ class Process extends React.Component{
           })
           serial.write();
       });
-
-    }else{
-      serial.stop();
     }
 
   }
 
   render(){
 
-    let name = "Start";
-    let color = "blue";
+    if(this.state.status == "run")
+      return this.getRunContent();
+    else if(this.state.status == "stop")
+      return this.getStopContent();
+    else if(this.state.status == "pause")
+      return this.getPauseContent();
 
-    if(this.state.isWorking){
-      name = "Stop";
-      color = "red";
-    }
-
-    return React.createElement(
-              "div",
-              { "className": "content" },
-              React.createElement(
-                ButtonLG, { color: color, name: name, click: this.click }
-              )
-            );
   }
 }
 
