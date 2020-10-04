@@ -36,7 +36,7 @@ class DrillLine extends React.Component{
                 null,
                 React.createElement(
                   "div",
-                  { "class": "form-check form-check-inline" },
+                  { "className": "form-check form-check-inline" },
                   React.createElement("input", {
                     type: "checkbox",
                     "className": "form-check-input",
