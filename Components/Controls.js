@@ -2,6 +2,7 @@ var React = require("react");
 
 const config = require('../app/singleton/config');
 const serial = require('../app/singleton/serial');
+const _state = require('../app/singleton/state');
 
 var Slider = require("../Components/Slider.js");
 var ButtonLG = require("../Components/ButtonLG.js");
@@ -17,94 +18,120 @@ class Controls extends React.Component{
   }
 
   OnOff(){
+    if(_state.getStatus() == "run") return;
+
     if(this.state.isLaserOn){
       let cmd = "M3 S" + config.getPWM();
-      serial.send(cmd);
+      serial.sendAsync(cmd);
     }else{
       let cmd = "M5";
-      serial.send(cmd);
+      serial.sendAsync(cmd);
     }
 
     this.setState({isLaserOn: !this.state.isLaserOn});
   }
 
   UpLf(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 Y${step} X-${step} Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   UpRg(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 Y${step} X${step} Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   DwLf(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 Y-${step} X-${step} Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   DwRg(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 Y-${step} X${step} Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
 
   incY(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 X0 Y${step} Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   incX(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 X${step} Y0 Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   incZ(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 X0 Y0 Z${step} F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   decY(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 X0 Y-${step} Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   decX(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 X-${step} Y0 Z0 F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   decZ(){
+    if(_state.getStatus() == "run") return;
+
     let step =  config.getByKey("step");
     let feed = config.getByKey("feed");
     let cmd = `$J=G91 G21 X0 Y0 Z-${step} F`+ feed;
-    serial.send(cmd);
+    serial.sendAsync(cmd);
   }
 
   unlock(){
-    serial.send('$X');
+    if(_state.getStatus() == "run") return;
+
+    serial.sendAsync('$X');
   }
 
   home(){
-    serial.send('$H');
+    if(_state.getStatus() == "run") return;
+
+    serial.sendAsync('$G28');
   }
 
 
