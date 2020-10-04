@@ -8,6 +8,7 @@ class ConsoleInput extends React.Component{
     this.state = {value: ''};
 
     this.handleChange = this.handleChange.bind(this);
+    this.EnterHandler = this.EnterHandler.bind(this);
     this.send = this.send.bind(this);
   }
 
@@ -15,15 +16,20 @@ class ConsoleInput extends React.Component{
     this.setState({value: event.target.value});
   }
 
+  EnterHandler(event) {
+    if(event.key == "Enter")
+      this.send();
+  }
+
   send() {
-    serial.send(this.state.value);
+    serial.sendAsync(this.state.value);
   }
 
   render(){
     return React.createElement(
               "div",
               { "className": "input-group" },
-              React.createElement("input", { type: "text", "className": "form-control form-control-sm", placeholder: "Gcode", onChange: this.handleChange}),
+              React.createElement("input", { type: "text", "className": "form-control form-control-sm", placeholder: "Gcode", onChange: this.handleChange, onKeyPress: this.EnterHandler}),
               React.createElement(
                 "div",
                 { "className": "input-group-append", id: "button-addon4" },
