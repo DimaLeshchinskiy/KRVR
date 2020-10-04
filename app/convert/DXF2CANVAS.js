@@ -59,7 +59,8 @@ function CircleAdd(ctx, entity){
 }
 
 function roundNumber(num) {
-    return util.roundToDigits(num, 2);
+    //return util.roundToDigits(num, 2);
+    return num;
 }
 
 exports.getCanvas = function(file){
