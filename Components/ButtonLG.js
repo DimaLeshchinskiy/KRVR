@@ -8,6 +8,10 @@ class ButtonLG extends React.Component{
       classNames.push("btn-primary");
     }else if(this.props.color == "red"){
       classNames.push("btn-danger");
+    }else if(this.props.color == "orange"){
+      classNames.push("btn-warning");
+    }else if(this.props.color == "green"){
+      classNames.push("btn-success");
     }
     else{
       classNames.push("btn-secondary");
