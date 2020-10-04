@@ -321,6 +321,29 @@ function checkGeometryPosition(geometry){
   return (box.min.y >= 0);
 }
 
+function changeTool(){
+
+  let maxZ = config.getDevZ();
+  let touchPlateHeight = 15; //mm
+  let offset = touchPlateHeight + 5;
+
+  let code = [
+    "M5",
+    "G0 Z" + maxZ,
+    "G0 X0 Y0",
+    "M0", //waiting for tool change
+
+    "G0 Z" + offset + " F200",
+    "G91 G38.2 Z-" + offset + " F30",
+    "G92 Z" + touchPlateHeight,
+    "G0 Z" + maxZ,
+    "M0",
+    "M3"
+  ];
+
+  return code;
+}
+
 exports.getGcode = async function(file){
   let step = 1;
   let geometry = getMeshGeometry(file);
@@ -365,6 +388,8 @@ exports.getGcode = async function(file){
 
   for(let i = 0; i < drills.length; i++){
     let drill = drills[i];
+    gcode = gcode.concat(changeTool(drill));
+
     for(let j = 0; j < layers.length; j++){
       let layer = layers[j];
       let lines = [];
