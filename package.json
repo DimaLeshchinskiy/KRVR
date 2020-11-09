@@ -5,8 +5,8 @@
   "author": "DimaLeshchinskiy",
   "main": "main.js",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/DimaLeshchinskiy/KRVR.git"
+    "type": "git",
+    "url": "https://github.com/DimaLeshchinskiy/KRVR.git"
   },
   "build": {
     "publish": [
@@ -50,17 +50,18 @@
     "electron": "^8.2.3",
     "electron-builder": "^22.7.0",
     "electron-packager": "^14.2.1",
-    "electron-rebuild": "^1.10.1"
+    "electron-rebuild": "^1.11.0"
   },
   "dependencies": {
     "dxf-parser": "^1.0.0-alpha.2",
     "electron-is-dev": "^1.2.0",
     "electron-updater": "^4.3.1",
     "jquery": "^3.5.0",
+    "mocha": "^7.2.0",
     "pngjs": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "serialport": "^8.0.7",
+    "serialport": "^9.0.2",
     "three-dxf": "^0.3.1"
   }
 }

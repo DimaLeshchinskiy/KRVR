@@ -82,6 +82,7 @@ class Process extends React.Component{
   generateGCODE(){
 
     //delete from this
+    /*
     let files = fileManager.getAll();
     let promises = [];
 
@@ -92,7 +93,7 @@ class Process extends React.Component{
 
     Promise.allSettled(promises).
       then((results) => results.forEach((result) => console.log(result.value)));
-
+    */
     //delete to this
 
     if(!serial.isOpen()){

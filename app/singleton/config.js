@@ -4,14 +4,17 @@ const listener = new events.EventEmitter();
 
 exports.listener = listener;
 
-var MAXPWM = 255;
+var MAX_PWM = 255;
+var MAX_FEED = 1000;
 
 exports.save = save;
 exports.load = load;
 exports.put = put;
 exports.set = set;
 exports.getByKey = getByKey;
+
 exports.getPWM = getPWM;
+exports.getMaxFeed = getMaxFeed;
 
 exports.getDevX = getDevX;
 exports.getDevY = getDevY;
@@ -22,7 +25,11 @@ function save(){
 }
 
 function getPWM(){
-  return getByKey("pwm") * (MAXPWM / 100);
+  return getByKey("pwm") * (MAX_PWM / 100);
+}
+
+function getMaxFeed(){
+  return MAX_FEED;
 }
 
 function load(){

@@ -31,6 +31,7 @@
   var $ = require('jquery');
   var jQuery = $;
 
+
   const config = require('../app/singleton/config');
   config.load();
 
@@ -39,6 +40,15 @@
 
   const drillService = require('../app/service/drillService');
   drillService.load();
+  /*
+    const ser = require('../app/service/STEPservice');
+    let params = {
+      path: "C:\\Users\\Dima\\Desktop\\Testmodel_01.step",
+      extension: ".step",
+      autoload: true
+    }
+    ser.getSTEP(params);
+  */
 
   const React = require('react');
   const ReactDOM = require('react-dom');

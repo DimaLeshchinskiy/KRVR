@@ -79,9 +79,8 @@ function writeToArduino(){
 
   let data = buffer.shift();
 
-  console.log(data);
-
-  if(data){
+  if(data && data.trim()){
+    console.log(data);
     listener.emit("log", data, "input");
     stateChange(data);
     connection.write(data + "\n");

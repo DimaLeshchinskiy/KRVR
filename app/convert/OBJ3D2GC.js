@@ -54,13 +54,13 @@ async function getLayers(param){
   let depth = param.size.depth;
 
   //camera
-  /*camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 0, depth + 1);
+  camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 0, depth + 1);
   camera.position.set(0, depth + 1, 0);
   camera.lookAt(0, 0, 0);
 
   //renderer
   let renderer = param.renderer;
-  renderer.setSize(width, height);*/
+  renderer.setSize(width, height);
 
   let layers = [];
   let step = param.step;
@@ -68,8 +68,8 @@ async function getLayers(param){
   for(let i = depth; i >= 0; i -= step)
   {
     //scene
-    /*let scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xFF0000);*/
+    let scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xFF0000);
 
     //mesh
     let planeGeometry = new THREE.BoxGeometry(width, step, height);
@@ -79,19 +79,19 @@ async function getLayers(param){
     let planeBSP = new ThreeBSP(planeGeometry);
     planeBSP = planeBSP.intersect(param.geometryBSP);
 
-    //let mesh = planeBSP.toMesh();
+    let mesh = planeBSP.toMesh();
     if(layers.length > 1 && planeBSP.tree.allPolygons().length == 0) break; //exit if result is empty
-    //scene.add(mesh);
+    scene.add(mesh);
 
     //render
-    /*renderer.render(scene, camera);
+    renderer.render(scene, camera);
     let img = await loadImage(renderer.domElement.toDataURL());
     img.width = width;
-    img.height = height;*/
+    img.height = height;
 
     let newLayer = {
-      /*img: img,
-      imageData: getImageData(img),*/
+      img: img,
+      imageData: getImageData(img),
       from: i + step/2,
       z: i,
       to: i - step/2,
@@ -222,7 +222,8 @@ function getStartPoint(drillRadius, size){
 function getLine(p1, p2, params){
   cmd = [];
 
-  let maxZ = config.getDevZ();
+  let maxZ = params.maxObjectZ + 2;
+  let maxSpeed = config.getMaxFeed();
   //let z = params.z - params.zOffset;
 
   let point0 = {
@@ -235,11 +236,11 @@ function getLine(p1, p2, params){
     y: p2.y - params.yOffset
   };
 
-  cmd.push("G0 X" + point0.x + " Y" + point0.y + " F" + params.feed); //go to start point
+  cmd.push("G0 X" + point0.x + " Y" + point0.y + " F" + maxSpeed); //go to start point
   cmd.push("G1 Z" + params.z + " F" + params.feed); //go max down
 
   cmd.push("G1 X" + point1.x + " Y" + point1.y + " F" + params.feed); //go to end point
-  cmd.push("G1 Z" + maxZ + " F" + params.feed); //go max up
+  cmd.push("G1 Z" + maxZ + " F" + maxSpeed); //go max up
 
   return cmd;
 }
@@ -288,7 +289,8 @@ function getGcodeFromLines(lines, z, params){
         z:z,
         xOffset: params.xOffset,
         yOffset: params.yOffset,
-        feed: params.feed
+        feed: params.feed,
+        maxObjectZ: params.maxObjectZ
       });
     gcode = gcode.concat(code);
   }
@@ -299,20 +301,23 @@ function calculateGcode(lines, params){
   let gcode = [];
 
   let height = params.layerFrom - params.layerTo;
-  let fullCountOfLayer = 1; //layer.from and to todo
+  let fullCountOfLayer = 0; //layer.from and to todo
   if(height > params.drillLen)
-    fullCountOfLayer = (height - (height % params.drillLen)) / params.drillLen;
+    fullCountOfLayer = Math.trunc(height / params.drillLen) + 1; //trunc => convert float to int
 
-  for(let j = fullCountOfLayer; j > 0; j--){
+  console.log("Calc");
+  console.log(fullCountOfLayer, params.drillLen, params.layerTo);
+
+  for(let j = fullCountOfLayer; j >= 0; j--){
     let z = j * params.drillLen + params.layerTo;
     gcode = gcode.concat(getGcodeFromLines(lines, z, params));
   }
-
+/*
   if(height % params.drillLen){
     let z = params.layerTo;
     gcode = gcode.concat(getGcodeFromLines(lines, z, params));
   }
-
+*/
   return gcode;
 }
 
@@ -354,22 +359,22 @@ exports.getGcode = async function(file){
   let size = getSize(geometry);
   size.depth = file.material.depth;
 
-  /*let renderer = new THREE.WebGLRenderer({
+  let renderer = new THREE.WebGLRenderer({
     logarithmicDepthBuffer: true
   });
-  renderer.setPixelRatio(window.devicePixelRatio);*/
+  renderer.setPixelRatio(window.devicePixelRatio);
 
   let layers = await getLayers(
   {
     geometryBSP: new ThreeBSP(geometry),
     size: size,
-    //renderer: renderer,
+    renderer: renderer,
     step: step,
     zOffset: file.Z3D
   });
 
-  /*for(let i = 0; i < layers.length; i++)
-    console.image(layers[i].img.src);*/
+  for(let i = 0; i < layers.length; i++)
+    console.image(layers[i].img.src);
 
   let drills = drillService.getSortedSet();
 
@@ -386,9 +391,15 @@ exports.getGcode = async function(file){
   let gcode = [];
   console.log("debug");
 
+  // go up on start
+  let maxZ = config.getDevZ();
+  let maxSpeed = config.getMaxFeed();
+  gcode.push("G1 Z" + maxZ + " F" + maxSpeed);
+
+  //calculate gcode
   for(let i = 0; i < drills.length; i++){
     let drill = drills[i];
-    gcode = gcode.concat(changeTool(drill));
+    //gcode = gcode.concat(changeTool(drill));
 
     for(let j = 0; j < layers.length; j++){
       let layer = layers[j];
@@ -405,7 +416,8 @@ exports.getGcode = async function(file){
                                           layerFrom:  layer.from,
                                           layerTo:  layer.to,
                                           layerZ:  layer.z,
-                                          feed: config.getByKey("feed")
+                                          feed: config.getByKey("feed"),
+                                          maxObjectZ: file.material.depth - file.Z3D
                                         });
       gcode = gcode.concat(code);
     }
