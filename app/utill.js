@@ -30,3 +30,11 @@ exports.generateUUID = () => {
 		return uuid.toUpperCase();
 
 	};
+
+	exports.deg2rad = (deg) => {
+	  return (deg * Math.PI) / 180;
+	};
+
+	exports.rad2deg = (rad) => {
+	  return (rad * 180) / Math.PI;
+	};

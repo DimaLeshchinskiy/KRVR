@@ -89,6 +89,18 @@ exports.getById = function(id){
   return null;
 }
 
+exports.getLongest = function(){
+  let drills = this.getSortedSet();
+  let drill = drills[0];
+
+  for (var i = 1; i < drills.length; i++){
+    if(drills[i].size >= drill.size)
+      drill = drills[i];
+  }
+
+  return drill;
+}
+
 exports.pushInSet = function(id){
   let drill = getById(id);
 
