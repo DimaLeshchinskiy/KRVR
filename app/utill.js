@@ -38,3 +38,16 @@ exports.generateUUID = () => {
 	exports.rad2deg = (rad) => {
 	  return (rad * 180) / Math.PI;
 	};
+
+	exports.threshold = (imgData, threshold) => {
+		for (i = 0; i < imgData.data.length; i += 4) {
+	    let avg = imgData.data[i+0] > threshold? 255:0;
+
+	    imgData.data[i+0] = avg;
+	    imgData.data[i+1] = avg;
+	    imgData.data[i+2] = avg;
+	    //imgData.data[i+3] = same
+	  }
+
+		return imgData;
+	};

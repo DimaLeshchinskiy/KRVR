@@ -40,7 +40,7 @@ class FileManager extends React.Component{
                 file.name,
                 React.createElement("button", {onClick:this.onDelete, "className":"btn btn-sm btn-danger", "type":"button"}, "Delete")
             ));
-      if(classActive && file.extension == "png") //this is faster check
+      if(classActive && (file.extension == "png" || file.extension == "bmp")) //this is faster check
         list.push(this.getPropertyWindow(file));
 
     }
