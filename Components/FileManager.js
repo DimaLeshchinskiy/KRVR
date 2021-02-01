@@ -1,6 +1,7 @@
 var React = require("react");
 
 var fileManager = require("../app/singleton/fileManager");
+var fileService = require("../app/service/fileService");
 
 var FileProperty = require("../Components/FileProperty.js");
 
@@ -40,7 +41,8 @@ class FileManager extends React.Component{
                 file.name,
                 React.createElement("button", {onClick:this.onDelete, "className":"btn btn-sm btn-danger", "type":"button"}, "Delete")
             ));
-      if(classActive && (file.extension == "png" || file.extension == "bmp")) //this is faster check
+            
+      if(classActive && fileService.isFileRasterGraphic(file)) //this is faster check
         list.push(this.getPropertyWindow(file));
 
     }
