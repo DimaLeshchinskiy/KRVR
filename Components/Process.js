@@ -21,6 +21,8 @@ class Process extends React.Component{
     this.stop = this.stop.bind(this);
     this.resume = this.resume.bind(this);
 
+    this.animate = this.animate.bind(this);
+
     this.state = {status: state.getStatus()};
 
     state.listener.on("changeStatus", (state) => this.setState({status: state}));
@@ -43,12 +45,19 @@ class Process extends React.Component{
     serial.stop();
   }
 
+  animate(){
+
+  }
+
   getStopContent(){
     return React.createElement(
               "div",
               { "className": "content" },
               React.createElement(
                 ButtonLG, { color: "blue", name: "GO", click: this.run }
+              ),
+              React.createElement(
+                ButtonLG, { color: "blue", name: "Animate", click: this.animate }
               )
             );
   }
@@ -62,6 +71,9 @@ class Process extends React.Component{
               ),
               React.createElement(
                 ButtonLG, { color: "red", name: "Stop", click: this.stop }
+              ),
+              React.createElement(
+                ButtonLG, { color: "blue", name: "Animate", click: this.animate }
               )
             );
   }
@@ -82,7 +94,7 @@ class Process extends React.Component{
   generateGCODE(){
 
     //delete from this
-    /*
+/*
     let files = fileManager.getAll();
     let promises = [];
 
@@ -93,7 +105,7 @@ class Process extends React.Component{
 
     Promise.allSettled(promises).
       then((results) => results.forEach((result) => console.log(result.value)));
-    */
+*/
     //delete to this
 
     if(!serial.isOpen()){
