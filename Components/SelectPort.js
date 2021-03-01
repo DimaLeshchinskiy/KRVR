@@ -12,10 +12,10 @@ class SelectPort extends React.Component{
 
     this.scan = this.scan.bind(this);
     this.renderOptions = this.renderOptions.bind(this);
+    this.renderConnectBtn = this.renderConnectBtn.bind(this);
     this.setConnection = this.setConnection.bind(this);
     this.closeConnection = this.closeConnection.bind(this);
     this.handleChange = this.handleChange.bind(this);
-
   }
 
   componentDidMount() {
@@ -86,6 +86,13 @@ class SelectPort extends React.Component{
     return options;
   }
 
+  renderConnectBtn(){
+    if(serial.isOpen())
+      return React.createElement( ButtonLG, { color: "blue", name: "Disconnect", click: this.closeConnection });
+    else
+      return React.createElement( ButtonLG, { color: "blue", name: "Connect", click: this.setConnection });
+  }
+
   render(){
     let options = this.renderOptions();
 
@@ -95,8 +102,9 @@ class SelectPort extends React.Component{
                 { "className": "form-control", value:this.state.setIndex, onChange:this.handleChange},
                 options
               ),
-              React.createElement( ButtonLG, { color: "blue", name: "Scan for ports", click: this.scan })
-              );
+              this.renderConnectBtn(),
+              React.createElement( ButtonLG, { color: "blue", name: "Refresh", click: this.scan })
+            );
   }
 }
 
