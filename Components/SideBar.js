@@ -14,7 +14,7 @@ const leftTabs = [{name: "Settings", item: Settings},
                   {name: "File Manager", item: FileManager},
                   {name: "Process", item: Process}];
 
-const rightTabs = [{name: "Controls", item: Controls},
+const rightTabs = [{name: "Virtual Pendant", item: Controls},
                    {name: "Console", item: Console}];
 
 

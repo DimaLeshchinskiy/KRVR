@@ -42,7 +42,7 @@ class Settings extends React.Component{
               { "className": "content" },
 
               React.createElement(Switch,
-                { name: "Darkmode enable", click:this.setDarkmode, def:config.getByKey("darkmode") }
+                { name: "Enable darkmode", click:this.setDarkmode, def:config.getByKey("darkmode") }
               ),
 
               React.createElement(SelectPort),
